@@ -279,7 +279,7 @@
             "https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/start-falcon-bootstrap.sh"
           ],
           
-          "commandToExecute": "[concat('bash start-falcon-bootstrap.sh --cid ', parameters('cid'), ' --client_id ', parameters('clientId'), '--client_secret', parameters('clientSecret'))]"
+          "commandToExecute": "[concat('bash start-falcon-bootstrap.sh --cid=', parameters('cid'), ' --client_id=', parameters('clientId'), ' --client_secret=', parameters('clientSecret'))]"
         }
       }
     }
