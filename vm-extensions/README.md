@@ -83,3 +83,33 @@ For more information, see the full [Resource Manager template](https://github.co
 ```
 
 For more information on creating Resource Manager templates, see [Authoring Azure Resource Manager templates](../windows/template-description.md#extensions).
+
+### Terraform 
+
+Terraform supports [Azure virtual machine extensions](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension)
+
+Example 
+```terraform
+resource "azurerm_virtual_machine_extension" "myterraformvm" {
+  name = "hostname"
+  virtual_machine_id = azurerm_linux_virtual_machine.myterraformvm.id
+  publisher = "Microsoft.Azure.Extensions"
+  type = "CustomScript"
+  type_handler_version = "2.0"
+
+  settings = <<SETTINGS
+    {
+      "fileUris": [
+          "https://raw.githubusercontent.com/CrowdStrike/Cloud-AWS/master/Agent-Install-Examples/bash/start-falcon-bootstrap.sh"
+      ],
+      "commandToExecute": "./start-falcon-bootstrap.sh --cid=${var.cid} --client_id=${var.client_id} --client_secret=${var.client_secret}"
+    }
+  SETTINGS
+
+  tags = {
+    environment = "Production"
+  }
+}
+```
+
+A working example is provided [here](https://github.com/CrowdStrike/Cloud-Azure/tree/master/vm-extensions/terraform)
