@@ -276,7 +276,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/CrowdStrike/Cloud-AWS/master/Agent-Install-Examples/bash/start-falcon-bootstrap.sh"
+            "https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/start-falcon-bootstrap.sh"
           ],
           
           "commandToExecute": "[concat('bash start-falcon-bootstrap.sh --cid ', parameters('cid'), ' --client_id ', parameters('clientId'), '--client_secret', parameters('clientSecret'))]"
