@@ -51,7 +51,7 @@ https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/direc
  
 # Account Onboarding Workflow
 
-![Account Onboarding)](images/Slide1.png)
+![Account Onboarding)](Discover/images/Slide1.png)
  
 
 1)	Customer sends an API POST request to https://api.crowdstrike.com/cloud-connect-azure/entities/account/v1.	
@@ -65,6 +65,6 @@ https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/direc
 
 The full scan and periodic scan both use the OAuth2 client assertion mechanism to authenticate to Azure and perform API requests to the Azure Resource Graph. 
 
-![Resource Discovery)](images/Slide2.png)
+![Resource Discovery)](Discover/images/Slide2.png)
 
 
