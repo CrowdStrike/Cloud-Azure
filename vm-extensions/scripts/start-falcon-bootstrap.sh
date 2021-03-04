@@ -1,5 +1,6 @@
 #!/bin/bash
-
+exec > logfile 2>&1
+set -x
 PROCEED=0
 for var in $*; do 
    if [[ "$var" == *--client_id=* ]]
