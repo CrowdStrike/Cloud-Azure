@@ -55,7 +55,7 @@ info:    vm extension set command OK
 
 VM extensions can be added to an Azure Resource Manager template and executed with the deployment of the template. When you deploy an extension with a template, you can create fully configured Azure deployments. 
 
-For more information, see the full [Resource Manager template](https://https://github.com/CrowdStrike/Cloud-Azure/blob/master/vm-extensions/arm/linux/Ubuntu-18).
+For more information, see the full [Resource Manager template](https://github.com/CrowdStrike/Cloud-Azure/blob/master/vm-extensions/arm/linux/Ubuntu-18).
 
 ```json
     {
