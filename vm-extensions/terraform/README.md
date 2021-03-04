@@ -2,7 +2,7 @@
 
 ### CrowdStrike Falcon Install - Terraform Implementation 
 
-Create a file <filename>.tfvars
+Create a file `<filename>.tfvars`
 
 Add the following to the file
 
