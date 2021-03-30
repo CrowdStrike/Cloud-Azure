@@ -48,7 +48,7 @@ resource "azurerm_virtual_machine_extension" "myterraformvm" {
   settings = <<SETTINGS
     {
       "fileUris": [
-          "https://raw.githubusercontent.com/CrowdStrike/Cloud-AWS/master/Agent-Install-Examples/bash/start-falcon-bootstrap.sh"
+          "https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/start-falcon-bootstrap.sh"
       ],
       "commandToExecute": "./start-falcon-bootstrap.sh --cid=${var.cid} --client_id=${var.client_id} --client_secret=${var.client_secret}"
     }
