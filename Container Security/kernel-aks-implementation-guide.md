@@ -72,15 +72,15 @@ Time needed to follow this guide: 45 minutes.
 - Set the required variables for falcon-sensor download
 
 ```
-    $ FALCON_CLIENT_ID=1234567890ABCDEFG1234567890ABCDEF
-    $ FALCON_CLIENT_SECRET=1234567890ABCDEFG1234567890ABCDEF
-    $ CID=1234567890ABCDEFG1234567890ABCDEF-12
+    FALCON_CLIENT_ID=1234567890ABCDEFG1234567890ABCDEF
+    FALCON_CLIENT_SECRET=1234567890ABCDEFG1234567890ABCDEF
+    CID=1234567890ABCDEFG1234567890ABCDEF-12
 ```
 - Use the container-image-tools to build a containerized falcon-sensor
 - Note: This demo uses the ubuntu18 image which was supported as of this writing
 
 ```
-    sudo docker run --privileged=true \
+    docker run --privileged=true \
         -v /var/run/docker.sock:/var/run/docker.sock \
         -v ~/.azure:/root/.azure \
         -e FALCON_CLIENT_ID="$FALCON_CLIENT_ID" \
