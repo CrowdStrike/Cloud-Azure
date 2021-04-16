@@ -26,21 +26,21 @@ Time needed to follow this guide: 45 minutes.
 ### Step 1: Setup an Azure Container Registry
 
 - Set your ACR registry name and resource group name into variables
-  ```
+```
     CLOUD_REGION=westus
     ACR_NAME=csDemoAcr01
     RG_NAME=rg_cswest
-  ```
+```
 - Create the resource group for the ACR and Cluster
-  ```
+```
     az group create --name $RG_NAME --location $CLOUD_REGION
-  ```
+```
 - Create the Azure Container Registry
-  ```
+```
     az acr create --name $ACR_NAME --sku basic -g $RG_NAME --location $CLOUD_REGION
-  ```
+```
   Example output:
-  ```
+```
     [
     {
         "adminUserEnabled": false,
@@ -60,7 +60,6 @@ Time needed to follow this guide: 45 minutes.
         "networkRuleBypassOptions": "AzureServices",
         "networkRuleSet": null,
         "policies": {
-        ....
 ```
 - Notate the login server from the output shown above and add to new variable
 ```
@@ -161,7 +160,6 @@ Example output:
         "maxCount": null,
         "maxPods": 110,
         "minCount": null,
-    ...
 ```
 - Install kubectl
 ```
