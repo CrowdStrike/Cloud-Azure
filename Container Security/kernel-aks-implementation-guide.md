@@ -61,21 +61,21 @@ Time needed to follow this guide: 45 minutes.
         "networkRuleSet": null,
         "policies": {
         ....
-   ```
+```
 - Notate the login server from the output shown above and add to new variable
-  ```
+```
   ACR_LOGINSERVER=csdemoacr01.azurecr.io
-  ```
+```
 
 ### Step 2: Create and upload containerized falcon-sensor
 
 - Set the required variables for falcon-sensor download
 
- ```
+```
     $ FALCON_CLIENT_ID=1234567890ABCDEFG1234567890ABCDEF
     $ FALCON_CLIENT_SECRET=1234567890ABCDEFG1234567890ABCDEF
     $ CID=1234567890ABCDEFG1234567890ABCDEF-12
- ```
+```
 - Use the container-image-tools to build a containerized falcon-sensor
 - Note: This demo uses the ubuntu18 image which was supported as of this writing
 
@@ -248,12 +248,12 @@ Example output:
 ```
 - (optional) Check the Reduced Functionality Mode state of the Falcon Sensor.
 - Note that the value returned should be false if running on supported kernel and platform versions.
-   ```
+```
      for i in $(kubectl get pods -n falcon-system | awk 'FNR > 1' | awk '{print $1}')
      do 
            echo "$i - $(kubectl exec $i -n falcon-system -c falcon-node-sensor -- falconctl -g --rfm-state)"
      done
-    ```
+```
 Example output:
 ```
     falcon-helm-falcon-sensor-4ffwz - rfm-state=false.
@@ -304,10 +304,3 @@ Example output:
 ```
     az group delete --name $RG_NAME
 ```
-
-
-
-
-
-
-
