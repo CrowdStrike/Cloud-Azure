@@ -17,30 +17,30 @@ Time needed to follow this guide: 45 minutes.
   * These credentials can be created in the Falcon platform under Support->API Clients and Keys.
   * For this step and practice of least privilege, you would want to create a dedicated API secret and key.
 - Azure Cli installed locally and authenticated
-  ```
+```
     az login
-  ```
+```
 
 ## Deployment
 
 ### Step 1: Setup an Azure Container Registry
 
 - Set your ACR registry name and resource group name into variables
-  ```
+```
     CLOUD_REGION=westus
     ACR_NAME=csDemoAcr01
     RG_NAME=rg_cswest
-  ```
+```
 - Create the resource group for the ACR and Cluster
-  ```
+```
     az group create --name $RG_NAME --location $CLOUD_REGION
-  ```
+```
 - Create the Azure Container Registry
-  ```
+```
     az acr create --name $ACR_NAME --sku basic -g $RG_NAME --location $CLOUD_REGION
-  ```
+```
   Example output:
-  ```
+```
     [
     {
         "adminUserEnabled": false,
@@ -70,15 +70,13 @@ Time needed to follow this guide: 45 minutes.
 ### Step 2: Create and upload containerized falcon-sensor
 
 - Set the required variables for falcon-sensor download
-
 ```
-    $ FALCON_CLIENT_ID=1234567890ABCDEFG1234567890ABCDEF
-    $ FALCON_CLIENT_SECRET=1234567890ABCDEFG1234567890ABCDEF
-    $ CID=1234567890ABCDEFG1234567890ABCDEF-12
+    FALCON_CLIENT_ID=1234567890ABCDEFG1234567890ABCDEF
+    FALCON_CLIENT_SECRET=1234567890ABCDEFG1234567890ABCDEF
+    CID=1234567890ABCDEFG1234567890ABCDEF-12
 ```
 - Use the container-image-tools to build a containerized falcon-sensor
 - Note: This demo uses the ubuntu18 image which was supported as of this writing
-
 ```
     docker run --privileged=true \
         -v /var/run/docker.sock:/var/run/docker.sock \
@@ -272,6 +270,7 @@ Example output:
     service/vulnerable-example-com created
 ```
 - Retrieve the  external IP address from the vulnapp service
+- Note: This may need to be ran multiple times while the ingress service is built
 ```
     echo "http://$(kubectl get service vulnerable-example-com  -o yaml -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")/"
 ```
