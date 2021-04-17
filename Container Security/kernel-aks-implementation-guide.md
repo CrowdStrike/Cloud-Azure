@@ -23,6 +23,7 @@ Time needed to follow this guide: 45 minutes.
 
 ## Deployment
 
+
 ### Step 1: Setup an Azure Container Registry
 
 - Set your ACR registry name and resource group name into variables
@@ -66,6 +67,7 @@ Time needed to follow this guide: 45 minutes.
 ```
   ACR_LOGINSERVER=csdemoacr01.azurecr.io
 ```
+
 
 ### Step 2: Create and upload containerized falcon-sensor
 
@@ -125,7 +127,8 @@ Example output:
     docker push $ACR_LOGINSERVER/falcon-node-sensor:latest
 ```
 
-### Step 2: Create the AKS cluster and deploy the falcon-helm chart
+
+### Step 3: Create the AKS cluster and deploy the falcon-helm chart
 
 - Set the name of the AKS Cluster into a variable
 ```
@@ -258,7 +261,9 @@ Example output:
     falcon-helm-falcon-sensor-l2c5w - rfm-state=false.
     falcon-helm-falcon-sensor-t7rxz - rfm-state=false.
 ```
-### Step 3: (Optional) Deploy the vulnapp project to the cluster and test detections
+
+
+### Step 4: (Optional) Deploy the vulnapp project to the cluster and test detections
 
 - Deploy the vulnapp manifest to cluster
 ```
