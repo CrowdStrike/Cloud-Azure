@@ -136,7 +136,7 @@ Example output:
 ```
 - Create the AKS Cluster and attach the ACR
 ```
-    az aks create --name $AKS_CLUSTER --kubernetes-version 1.18.14 --attach-acr $ACR_NAME -g $RG_NAME
+    az aks create --name $AKS_CLUSTER --kubernetes-version 1.18.14 --attach-acr $ACR_NAME -g $RG_NAME --generate-ssh-keys
 ```
 Example output:
 ```
