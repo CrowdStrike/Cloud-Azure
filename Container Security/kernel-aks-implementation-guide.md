@@ -27,9 +27,10 @@ Time needed to follow this guide: 45 minutes.
 ### Step 1: Setup an Azure Container Registry
 
 - Set your ACR registry name and resource group name into variables
+- Note: The ACR_NAME must be a unique name globally as a DNS record is created to reference the image registry
 ```
     CLOUD_REGION=westus
-    ACR_NAME=csDemoAcr01
+    ACR_NAME=<arc_unique_name>
     RG_NAME=rg_cswest
 ```
 - Create the resource group for the ACR and Cluster
