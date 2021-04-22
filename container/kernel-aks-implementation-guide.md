@@ -16,10 +16,20 @@ Time needed to follow this guide: 45 minutes.
 - API Credentials from Falcon with Sensor Download Permissions
   * These credentials can be created in the Falcon platform under Support->API Clients and Keys.
   * For this step and practice of least privilege, you would want to create a dedicated API secret and key.
+- Install helm using the below command
+```
+    curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+```
 - Azure Cli installed locally and authenticated
+
 ```
     az login
 ```
+- Install kubectl
+```
+    az aks install-cli
+```
+
 
 ## Deployment
 
@@ -165,10 +175,6 @@ Example output:
         "minCount": null,
     ...
 ```
-- Install kubectl
-```
-    az aks install-cli
-```
 - Get the cluster config and credentials
 ```
     az aks get-credentials --name $AKS_CLUSTER -g $RG_NAME
@@ -183,10 +189,6 @@ Example output:
     aks-nodepool1-25659352-vmss000000   Ready    agent   6m48s   v1.18.14
     aks-nodepool1-25659352-vmss000001   Ready    agent   7m8s    v1.18.14
     aks-nodepool1-25659352-vmss000002   Ready    agent   6m51s   v1.18.14
-```
-- Install helm using the below command
-```
-    curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 ```
 - Add the falcon-helm repository
 ```
