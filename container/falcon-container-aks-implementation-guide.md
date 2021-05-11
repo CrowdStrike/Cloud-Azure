@@ -36,9 +36,9 @@ az aks install-cli
 - Set your ACR registry name and resource group name into variables
 - Note: The ACR_NAME must be a unique name globally as a DNS record is created to reference the image registry
 ```
-CLOUD_REGION=westus
+CLOUD_REGION=<your_az_region>
 ACR_NAME=<arc_unique_name>
-RG_NAME=rg_cswest
+RG_NAME=<your_az_rg>
 ```
 - Create the resource group for the ACR and Cluster
 ```
