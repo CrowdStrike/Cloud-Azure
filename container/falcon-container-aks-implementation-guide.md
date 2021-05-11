@@ -16,7 +16,7 @@ Time needed to follow this guide: 45 minutes.
 - API Credentials from Falcon with Sensor Download Permissions
   * These credentials can be created in the Falcon platform under Support->API Clients and Keys.
   * For this step and practice of least privilege, you would want to create a dedicated API secret and key.
-- Azure Cli installed locally and authenticated
+- [Azure Cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) installed locally and authenticated
 
 ```
 az login
