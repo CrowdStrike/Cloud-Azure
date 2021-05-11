@@ -238,7 +238,7 @@ usage:
 
 - Deploy the vulnapp manifest to cluster
 ```
-    kubectl apply -f  https://raw.githubusercontent.com/isimluk/vulnapp/master/vulnerable.example.yaml
+kubectl apply -f  https://raw.githubusercontent.com/isimluk/vulnapp/master/vulnerable.example.yaml
 ```
 Example output:
 ```
@@ -248,7 +248,7 @@ Example output:
 - Retrieve the  external IP address from the vulnapp service
 - Note: This may need to be ran multiple times while the ingress service is built
 ```
-    echo "http://$(kubectl get service vulnerable-example-com  -o yaml -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")/"
+ echo "http://$(kubectl get service vulnerable-example-com  -o yaml -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")/"
 ```
 Example output:
 ```
@@ -257,24 +257,26 @@ http://111.11.111.111/
 - Visit this web address and use the links to test detections
 - Tear down the vulnapp deployment
 ```
-    kubectl delete -f  https://raw.githubusercontent.com/isimluk/vulnapp/master/vulnerable.example.yaml
+kubectl delete -f  https://raw.githubusercontent.com/isimluk/vulnapp/master/vulnerable.example.yaml
 ```
 
 ### Step 6: Tear down the demo
 
 - Remove the falcon-container sensor deployment
 ```
-    ????
+docker run --rm --entrypoint installer $FALCON_IMAGE_URI \
+    -cid $CID -image $FALCON_IMAGE_URI \
+    | kubectl delete -f -
 ```
 - Run the delete cluster command and select Y when prompted
 ```
-    az aks delete --name $AKS_CLUSTER -g $RG_NAME
+az aks delete --name $AKS_CLUSTER -g $RG_NAME
 ```
 - Run the delete ACR command and select Y when prompted
 ```
-    az acr delete --name $ACR_NAME -g $RG_NAME
+az acr delete --name $ACR_NAME -g $RG_NAME
 ```
 - Run the delete resource group command and select Y when prompted
 ```
-    az group delete --name $RG_NAME
+az group delete --name $RG_NAME
 ```
