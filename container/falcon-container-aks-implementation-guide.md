@@ -87,7 +87,7 @@ FALCON_IMAGE_URI=$ACR_LOGINSERVER/falcon-sensor:latest
 ```
 - Login to the Falcon Platform and Navigate to Hosts->Sensor Downloads
 
-- Download the latest 'Container' sensor (Support for AKS was added in 6.23.601)
+- Download the latest 'Container' sensor (Support for AKS was added in ``6.23.601``. Any sensor from ``6.23.601`` onwards is acceptable!)
 
 - Import the sensor you just downloaded to your local docker. 
 Example output:
