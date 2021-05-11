@@ -8,6 +8,7 @@ Time needed to follow this guide: 45 minutes.
 
 ## Pre-requisites
 
+- Refer to the lastest documentation on the [falcon-container](https://falcon.crowdstrike.com/documentation/146/falcon-container-sensor-for-linux)
 - Existing Azure Subscription and Global Adminstrator permissions
 - You will need a workstation to complete the installation steps below
   * These steps have been tested on Linux and should also work with OSX
@@ -19,11 +20,11 @@ Time needed to follow this guide: 45 minutes.
 - Azure Cli installed locally and authenticated
 
 ```
-    az login
+az login
 ```
 - Install kubectl
 ```
-    az aks install-cli
+az aks install-cli
 ```
 
 ## Deployment
@@ -34,17 +35,17 @@ Time needed to follow this guide: 45 minutes.
 - Set your ACR registry name and resource group name into variables
 - Note: The ACR_NAME must be a unique name globally as a DNS record is created to reference the image registry
 ```
-    CLOUD_REGION=westus
-    ACR_NAME=<arc_unique_name>
-    RG_NAME=rg_cswest
+CLOUD_REGION=westus
+ACR_NAME=<arc_unique_name>
+RG_NAME=rg_cswest
 ```
 - Create the resource group for the ACR and Cluster
 ```
-    az group create --name $RG_NAME --location $CLOUD_REGION
+az group create --name $RG_NAME --location $CLOUD_REGION
 ```
 - Create the Azure Container Registry
 ```
-    az acr create --name $ACR_NAME --sku basic -g $RG_NAME --location $CLOUD_REGION
+az acr create --name $ACR_NAME --sku basic -g $RG_NAME --location $CLOUD_REGION
 ```
   Example output:
 ```
@@ -71,17 +72,48 @@ Time needed to follow this guide: 45 minutes.
 ```
 - Notate the login server from the output shown above and add to a new variable
 ```
-  ACR_LOGINSERVER=csdemoacr01.azurecr.io
+ACR_LOGINSERVER=csdemoacr01.azurecr.io
 ```
-
 
 ### Step 2: Download the falcon-container sensor
 
-- 
+Note: For existing ACR set the loginServer attribute from the ACR to the following variable.
+```
+ACR_LOGINSERVER=<loginServer>
+```
+- Set the FALCON_IMAGE_UI variable to the full path of the tagged image and repository for future use
+```
+FALCON_IMAGE_URI=$ACR_LOGINSERVER/falcon-sensor:latest
+```
+- Login to the Falcon Platform and Navigate to Hosts->Sensor Downloads
 
+- Download the latest 'Container' sensor (Support for AKS was added in 6.23.601)
+
+- Import the tarball to your local docker. If you are following this guide inside the tooling container, you can run this command outside of the container as the docker socket is shared between your host system and the said tooling container.
+```
+docker load -i falcon-sensor-6.23.0-601.container.x86_64.tar.bz2
+```
+Example output:
+```
+ad2fea6dc0f1: Loading layer [==================================================>]   78.6MB/78.6MB
+Loaded image: falcon-sensor:6.23.0-601.container.x86_64.Release.US1
+```
+- List the loaded docker image
+```
+docker images | grep falcon-sensor
+```
+Example output:
+```
+   falcon-sensor  6.23.0-601.container.x86_64.Release.US1   e618c8efcc93   2 weeks ago    78.5MB
+```
+- Note the image name and the image tag in the first and second columns respectively
+- Using the local image name and tag, re-tag the image for your managed ECR using the variable previously set
+```
+docker tag falcon-sensor:6.23.0-601.container.x86_64.Release.US1 $FALCON_IMAGE_URI
+```
 - Authenticate to the ACR
 ```
-    az acr login -n $ACR_NAME
+ az acr login -n $ACR_NAME
 ```
 Example output:
 ```
@@ -90,19 +122,18 @@ Example output:
 ```
 - Upload the falcon-container-sensor to the ACR you created previously
 ```
-    docker push $ACR_LOGINSERVER/falcon-node-sensor:latest
+docker push $FALCON_IMAGE_URI
 ```
-
 
 ### Step 3: Create the AKS cluster
 
 - Set the name of the AKS Cluster into a variable
 ```
-    AKS_CLUSTER=csAksCluster01
+AKS_CLUSTER=csAksCluster01
 ```
 - Create the AKS Cluster and attach the ACR
 ```
-    az aks create --name $AKS_CLUSTER --kubernetes-version 1.18.14 --attach-acr $ACR_NAME -g $RG_NAME --generate-ssh-keys
+az aks create --name $AKS_CLUSTER --kubernetes-version 1.18.14 --attach-acr $ACR_NAME -g $RG_NAME --generate-ssh-keys
 ```
 Example output:
 ```
@@ -132,11 +163,11 @@ Example output:
 ```
 - Get the cluster config and credentials
 ```
-    az aks get-credentials --name $AKS_CLUSTER -g $RG_NAME
+az aks get-credentials --name $AKS_CLUSTER -g $RG_NAME
 ```
 - Run kubectl command to verify connectivity
 ```
-    kubectl get nodes
+kubectl get nodes
 ```
 Example output:
 ```
@@ -146,7 +177,64 @@ Example output:
     aks-nodepool1-25659352-vmss000002   Ready    agent   6m51s   v1.18.14
 ```
 
-### Step 4: (Optional) Deploy the vulnapp project to the cluster and test detections
+### Step 4: Install the Admission Controller and Injector POD
+
+Admission Controller is Kubernetes service that intercepts requests to the Kubernetes API server. Falcon Container Sensor hooks to this service and injects Falcon Container Sensor to any new pod deployment on the cluster. In this step we will configure and deploy the admission hook and the admission application.
+
+- Provide CrowdStrike Falcon Customer ID as environment variable. This CID will be later used to register newly deployed pods to CrowdStrike Falcon platform.
+```
+CID=1234567890ABCDEFG1234567890ABCDEF-12
+```
+- Install the admission controller
+```
+docker run --rm --entrypoint installer $FALCON_IMAGE_URI \
+    -cid $CID -image $FALCON_IMAGE_URI \
+    | kubectl apply -f -
+```
+Example output:
+```
+namespace/falcon-system created
+configmap/injector-config created
+secret/injector-tls created
+deployment.apps/injector created
+service/injector created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/injector.falcon-system.svc created
+```
+- (Optional) Watch the progress of a deployment
+```
+watch 'kubectl get pods -n falcon-system'
+```
+Example output:
+```
+NAME                        READY   STATUS    RESTARTS   AGE
+injector-6499dbd4b5-v5gqr   1/1     Running   0          2d3h
+```
+- (optional) Run the installer with --help command-line argument to output available configuration options for the deployment.
+```
+docker run --rm --entrypoint installer $FALCON_IMAGE_URI --help
+usage:
+  -cid string
+    	Customer id to use
+  -days int
+    	Validity of certificate in days. (default 3650)
+  -falconctl-env value
+    	FALCONCTL options in key=value format.
+  -image string
+    	Image URI to load (default "crowdstrike/falcon")
+  -mount-docker-socket
+    	A boolean flag to mount docker socket of worker node with sensor.
+  -namespaces string
+    	Comma separated namespaces with which image pull secret need to be created, applicable only with -pullsecret (default "default")
+  -pullpolicy string
+    	Pull policy to be defined for sensor image pulls (default "IfNotPresent")
+  -pullsecret string
+    	Secret name that is used to pull image (default "crowdstrike-falcon-pull-secret")
+  -pulltoken string
+    	Secret token, stringified dockerconfig json or base64 encoded dockerconfig json, that is used with pulling image
+  -sensor-resources string
+    	A valid json string or base64 encoded string of the same, which is used as k8s resources specification.
+```
+### Step 5: (Optional) Deploy the vulnapp project to the cluster and test detections
 
 - Deploy the vulnapp manifest to cluster
 ```
@@ -172,7 +260,7 @@ http://111.11.111.111/
     kubectl delete -f  https://raw.githubusercontent.com/isimluk/vulnapp/master/vulnerable.example.yaml
 ```
 
-### Step 3: Tear down the demo
+### Step 6: Tear down the demo
 
 - Remove the falcon-container sensor deployment
 ```
