@@ -89,10 +89,7 @@ FALCON_IMAGE_URI=$ACR_LOGINSERVER/falcon-sensor:latest
 
 - Download the latest 'Container' sensor (Support for AKS was added in 6.23.601)
 
-- Import the tarball to your local docker. If you are following this guide inside the tooling container, you can run this command outside of the container as the docker socket is shared between your host system and the said tooling container.
-```
-docker load -i falcon-sensor-6.23.0-601.container.x86_64.tar.bz2
-```
+- Import the sensor you just downloaded to your local docker. 
 Example output:
 ```
 ad2fea6dc0f1: Loading layer [==================================================>]   78.6MB/78.6MB
