@@ -8,7 +8,6 @@ Time needed to follow this guide: 45 minutes.
 
 ## Pre-requisites
 
-- Refer to the lastest documentation on the [falcon-container](https://falcon.crowdstrike.com/documentation/146/falcon-container-sensor-for-linux)
 - Existing Azure Subscription and Global Adminstrator permissions
 - You will need a workstation to complete the installation steps below
   * These steps have been tested on Linux and should also work with OSX
@@ -97,10 +96,11 @@ Loaded image: falcon-sensor:6.23.0-601.container.x86_64.Release.US1
 ```
 - List the loaded docker image
 ```
-docker images | grep falcon-sensor
+docker images | grep -e falcon-sensor -e REPOSITORY
 ```
 Example output:
 ```
+   REPOSITORY     TAG                                       IMAGE ID       CREATED        SIZE
    falcon-sensor  6.23.0-601.container.x86_64.Release.US1   e618c8efcc93   2 weeks ago    78.5MB
 ```
 - Note the image name and the image tag in the first and second columns respectively
