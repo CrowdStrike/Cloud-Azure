@@ -86,7 +86,7 @@ ACR_LOGINSERVER=<loginServer>
 ```
 FALCON_IMAGE_URI=$ACR_LOGINSERVER/falcon-sensor:latest
 ```
-- Login to the Falcon Platform and Navigate to Hosts->Sensor Downloads
+- Login to the Falcon Platform and Navigate to Hosts->[Sensor Downloads](https://falcon.crowdstrike.com/hosts/sensor-downloads)
 
 - Download the latest 'Container' sensor (Support for AKS was added in ``6.23.601``. Any sensor from ``6.23.601`` onwards is acceptable!)
 
