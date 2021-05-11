@@ -70,7 +70,7 @@ az acr create --name $ACR_NAME --sku basic -g $RG_NAME --location $CLOUD_REGION
         "policies": {
         ....
 ```
-- Notate the login server from the output shown above and add to a new variable
+- Notate the ``loginServer`` value from the output shown above and add to a new environment variable
 ```
 ACR_LOGINSERVER=csdemoacr01.azurecr.io
 ```
