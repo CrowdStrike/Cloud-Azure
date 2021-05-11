@@ -202,7 +202,7 @@ mutatingwebhookconfiguration.admissionregistration.k8s.io/injector.falcon-system
 ```
 - (Optional) Watch the progress of a deployment
 ```
-watch 'kubectl get pods -n falcon-system'
+kubectl get pods -n falcon-system -w
 ```
 Example output:
 ```
