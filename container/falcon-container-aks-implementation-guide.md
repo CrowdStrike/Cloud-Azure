@@ -1,6 +1,6 @@
 # Implementation Guide for CrowdStrike Falcon-Container Sensor on Azure AKS Kubernetes cluster
 
-This guide works through creation of a new Kubernetes cluster, deployment of the Falcon-Container Sensor, and demonstration of detection capabilities of Falcon Container Workload Protection.
+This guide works through the creation of a new Azure Kubernetes Service (AKS) cluster, deployment of the Falcon Container Sensor, and demonstration of detection capabilities of Falcon Container Workload Protection.
 
 No prior Kubernetes or Falcon knowledge is needed to follow this guide. First sections of this guide focus on creation of ACR Container registry and an AKS cluster, however, these sections may be skipped if you have access to an existing cluster.
 
