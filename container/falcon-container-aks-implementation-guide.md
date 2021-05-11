@@ -2,7 +2,7 @@
 
 This guide works through the creation of a new Azure Kubernetes Service (AKS) cluster, deployment of the Falcon Container Sensor, and demonstration of detection capabilities of Falcon Container Workload Protection.
 
-No prior Kubernetes or Falcon knowledge is needed to follow this guide. First sections of this guide focus on creation of ACR Container registry and an AKS cluster, however, these sections may be skipped if you have access to an existing cluster.
+No prior Kubernetes or Falcon knowledge is needed to follow this guide. The first sections of this guide focus on the creation of an Azure Container Registry (ACR) and an AKS cluster, however, these sections may be skipped if you have access to an existing registry and cluster.
 
 Time needed to follow this guide: 45 minutes.
 
