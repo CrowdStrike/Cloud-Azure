@@ -9,6 +9,8 @@ Note: In Kubernetes clusters where kernel module loading is supported by the wor
 
  - Falcon Sensor for Linux - deploying kernel-mode agent directly to the nodes
    - [Implementation Guide - Using Helm Charts in Azure AKS](kernel-aks-implementation-guide.md)
+- Falcon Container Sensor for Linux
+   - [Implementation Guide - Falcon Sensor for Linux on AKS](falcon-container-aks-implementation-guide.md)
 
 ## Additional Resources
  - CrowdStrike Container Security: [Product Page](https://www.crowdstrike.com/products/cloud-security/falcon-cloud-workload-protection/container-security/)
