@@ -1,0 +1,74 @@
+[ -f ~/TF_variables ] && source ~/TF_variables
+export TF_VAR_your_ip_address="$(curl -s ifconfig.co)/32"
+export TF_VAR_ssh_key=~/.ssh/container_lab_ssh_key
+if ! [ -f "$TF_VAR_ssh_key" ]; then
+    ssh-keygen -t rsa -b 2048 -N '' -f "$TF_VAR_ssh_key"
+fi
+export TF_VAR_ssh_key_pub=${TF_VAR_ssh_key}.pub
+export TF_VAR_object_id=$(az ad signed-in-user show | jq '.objectId' | sed 's/\"//g')
+[ -z "$TF_VAR_suffix" ] && read -p 'Enter a unique suffix value: ' TF_VAR_suffix && \
+      export TF_VAR_suffix
+[ -z "$TF_VAR_falcon_client_id" ] && read -p 'Enter the Falcon API Client ID: ' TF_VAR_falcon_client_id && \
+      export TF_VAR_falcon_client_id
+[ -z "$TF_VAR_falcon_client_secret" ]  && read -p 'Enter the Falcon API Client Secret: ' TF_VAR_falcon_client_secret && \
+      export TF_VAR_falcon_client_secret
+[ -z "$TF_VAR_falcon_cid" ] && read -p 'Enter the Falcon CID ' TF_VAR_falcon_cid && \
+      export TF_VAR_falcon_cid
+[ -z "$TF_VAR_falcon_cloud" ] && read -p 'Enter the Falcon Platform cloud region: ' TF_VAR_falcon_cloud && \
+      export TF_VAR_falcon_cloud
+cat << EOF > ~/TF_variables
+export TF_VAR_suffix=$TF_VAR_suffix
+EOF
+
+demo_up() {
+    BRANCH=falcon-container-terraform
+    GITHUB_ORG=mccbryan3
+    
+    [ -d ~/cloud-azure ] || (cd "$HOME" && git clone --branch $BRANCH --depth 1 https://github.com/$GITHUB_ORG/cloud-azure)
+    [ -d ~/falcon-container-terraform ] || (ln -s $HOME/cloud-azure/container/falcon-container-terraform $HOME/falcon-container-terraform)
+    cd ~/falcon-container-terraform
+
+    terraform init 
+    terraform apply 
+
+cat <<__END__
+                _ _
+                (_) |             Your kubernetes cluster,
+    __      ____ _ _| |_            Your admin vm,
+    \ \ /\ / / _\` | | __|           Your Falcon Container Sensor,
+     \ V  V / (_| | | |_            and Your vulnerable application,
+      \_/\_/ \__,_|_|\__|           are all coming up.
+
+                                    This can take about 5 minutes.
+    
+                                    Get some coffee.. You deserve it!!!
+__END__
+
+    rm ~/demo
+    sleep 330
+    ssh  -o "StrictHostKeyChecking no" azadmin@$(terraform output vm_public_ip | tr -d '"') -i ~/.ssh/container_lab_ssh_key
+}
+
+demo_down() {
+    terraform destroy && rm ~/TF_variables
+    cd ~
+#    rm ~/falcon-container-terraform
+#    rm -rf ~/cloud-azure
+}
+
+main(){
+    STATE=$(echo $1 | tr '[:upper:]' '[:lower:]')
+    if [[ $STATE == 'up' ]]
+    then
+        echo "Bringing up the demo environment"
+        demo_up
+    elif [[ $STATE == 'down' ]]
+    then
+        echo "Bringing down the demo environment"
+        demo_down
+    else
+        echo "Please enter valid argument for demo script (i.e. 'demo up' or 'demo down')"
+    fi
+}
+
+main "$@"
