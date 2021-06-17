@@ -1,11 +1,20 @@
+# Looks for variables file to accomodate unique suffix
 [ -f ~/TF_variables ] && source ~/TF_variables
+
+# Load the cloud shell public IP address into a variable to use in NSG
 export TF_VAR_your_ip_address="$(curl -s ifconfig.co)/32"
+
+# Create ssh key for admin vm access
 export TF_VAR_ssh_key=~/.ssh/container_lab_ssh_key
 if ! [ -f "$TF_VAR_ssh_key" ]; then
     ssh-keygen -t rsa -b 2048 -N '' -f "$TF_VAR_ssh_key"
 fi
 export TF_VAR_ssh_key_pub=${TF_VAR_ssh_key}.pub
+
+# Get the logged in users objectId to use for keyvault assignment
 export TF_VAR_object_id=$(az ad signed-in-user show | jq '.objectId' | sed 's/\"//g')
+
+# Work through collecting needed variables if they are not avaiable
 [ -z "$TF_VAR_suffix" ] && read -p 'Enter a unique suffix value: ' TF_VAR_suffix && \
       export TF_VAR_suffix
 [ -z "$TF_VAR_falcon_client_id" ] && read -p 'Enter the Falcon API Client ID: ' TF_VAR_falcon_client_id && \
@@ -16,20 +25,23 @@ export TF_VAR_object_id=$(az ad signed-in-user show | jq '.objectId' | sed 's/\"
       export TF_VAR_falcon_cid
 [ -z "$TF_VAR_falcon_cloud" ] && read -p 'Enter the Falcon Platform cloud region: ' TF_VAR_falcon_cloud && \
       export TF_VAR_falcon_cloud
+
+# Save the unique suffix for later
 cat << EOF > ~/TF_variables
 export TF_VAR_suffix=$TF_VAR_suffix
 EOF
 
+# Main demo up function
 demo_up() {
     BRANCH=falcon-container-terraform
     GITHUB_ORG=mccbryan3
     
     [ -d ~/cloud-azure ] || (cd "$HOME" && git clone --branch $BRANCH --depth 1 https://github.com/$GITHUB_ORG/cloud-azure)
-    [ -d ~/falcon-container-terraform ] || (ln -s $HOME/cloud-azure/container/falcon-container-terraform $HOME/falcon-container-terraform)
+    [ -d ~/falcon-container-terraform ] || (ln -sf $HOME/cloud-azure/container/falcon-container-terraform $HOME/falcon-container-terraform)
     cd ~/falcon-container-terraform
 
     terraform init 
-    terraform apply 
+    terraform apply
 
 cat <<__END__
                 _ _
@@ -41,19 +53,20 @@ cat <<__END__
 
                                     This can take about 5 minutes.
     
-                                    Get some coffee.. You deserve it!!!
+                                    Do not allow the console to time out!
 __END__
 
-    rm ~/demo
     sleep 330
     ssh  -o "StrictHostKeyChecking no" azadmin@$(terraform output vm_public_ip | tr -d '"') -i ~/.ssh/container_lab_ssh_key
 }
 
+# Main demo down function
 demo_down() {
-    terraform destroy && rm ~/TF_variables
-    cd ~
-#    rm ~/falcon-container-terraform
-#    rm -rf ~/cloud-azure
+    cd ~/falcon-container-terraform && \
+    terraform destroy && rm ~/TF_variables && \
+    cd ~ && \
+    rm ~/falcon-container-terraform && \
+    rm -rf ~/cloud-azure
 }
 
 main(){

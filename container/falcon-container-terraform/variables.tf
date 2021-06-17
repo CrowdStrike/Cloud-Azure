@@ -1,3 +1,8 @@
+variable "deploy_lumos" {
+  type = bool
+  description = "This option should be set to true or false. If set to false the daemonset will be deployed."
+}
+
 variable "cloud_region" {
   description = "The Azure cloud region in which to build out resources"
 }

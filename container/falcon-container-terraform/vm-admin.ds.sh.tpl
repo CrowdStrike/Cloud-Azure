@@ -6,9 +6,9 @@ main(){
     export DEBIAN_FRONTEND=noninteractive
     install_deps
     fetch_falcon_secrets
-    download_falcon_sensor
+    download_build_falcon_sensor
     push_falcon_sensor_to_image_registry
-    deploy_falcon_container_sensor
+    deploy_falcon_helm
     deploy_vulnerable_app
     wait_for_vulnerable_app
 }
@@ -32,11 +32,21 @@ install_deps(){
     wget -q -O /yaml/vulnerable.example.yaml https://raw.githubusercontent.com/isimluk/vulnapp/master/vulnerable.example.yaml
 }
 
-download_falcon_sensor(){
+download_build_falcon_sensor(){
     tmpdir=$(mktemp -d)
     pushd "$tmpdir" > /dev/null
-      falcon_sensor_download --os-name=Container
-      local_tag=$(cat ./falcon-sensor-* | docker load -q | grep 'Loaded image: falcon-sensor:' | sed 's/^.*Loaded image: falcon-sensor://g')
+      git clone https://github.com/CrowdStrike/Dockerfiles.git
+      cd Dockerfiles
+      falcon_sensor_download --os-name=Ubuntu --os-version=14/16/18/20 --sensor-version=latest
+      local_repo=falcon-node-sensor
+      tag=ubuntu
+      local_tag="$local_repo:$tag"
+      docker build --no-cache --build-arg \
+        BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+        --build-arg VCS_REF=$(git rev-parse --short HEAD) \
+        --build-arg FALCON_PKG=$(ls falcon-sensor_6*) \
+        -t "$local_tag" \
+        -f Dockerfile.ubuntu .
     popd > /dev/null
     rm -rf "$tmpdir"
 }
@@ -44,9 +54,9 @@ download_falcon_sensor(){
 push_falcon_sensor_to_image_registry(){
     sudo az acr login --name "${ACR_LOGIN_SERVER}"
     IMAGE_REGISTRY=$(echo "${ACR_LOGIN_SERVER}" | tr '[:upper:]' '[:lower:]')
-    FALCON_IMAGE_URI="$IMAGE_REGISTRY/falcon-sensor:latest"
-    sudo docker tag "falcon-sensor:$local_tag" "$FALCON_IMAGE_URI"
-    sudo docker push "$FALCON_IMAGE_URI"
+    FALCON_IMAGE_URI="$IMAGE_REGISTRY/$local_repo"
+    sudo docker tag "$local_tag" "$FALCON_IMAGE_URI:$tag"
+    sudo docker push "$FALCON_IMAGE_URI:$tag"
 }
 
 fetch_falcon_secrets() {
@@ -58,15 +68,23 @@ fetch_falcon_secrets() {
     export FALCON_CLIENT_ID
     export FALCON_CID
     export FALCON_CLOUD
+    export CID=$FALCON
 }
 
-deploy_falcon_container_sensor(){
-    injector_file="/yaml/injector.yaml"
-    sudo docker run --rm --entrypoint installer "$FALCON_IMAGE_URI" -cid "$FALCON_CID" -image "$FALCON_IMAGE_URI" > "$injector_file"
-
-    sudo kubectl apply -f "$injector_file"
-
-    sudo kubectl wait --for=condition=ready pod -n falcon-system -l app=injector
+deploy_falcon_helm(){
+    curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+    sudo apt-get install apt-transport-https --yes
+    echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+    sudo apt-get update
+    sudo apt-get install helm
+    helm repo add crowdstrike https://crowdstrike.github.io/falcon-helm
+    helm upgrade --install falcon-helm crowdstrike/falcon-sensor \
+        -n falcon-system --create-namespace \
+        --set falcon.cid="$FALCON_CID" \
+        --set node.image.repository="$FALCON_IMAGE_URI" \
+        --set node.image.tag="$tag"
+    sleep 5
+    kubectl wait --for=condition=ready pod -n falcon-system -l app=falcon-helm-falcon-sensor
 }
 
 deploy_vulnerable_app(){
@@ -100,6 +118,7 @@ trap 'err_handler $LINENO' ERR
 
 MOTD=/etc/motd
 
+
 LIVE_LOG=$MOTD.log
 
 (
@@ -108,11 +127,10 @@ LIVE_LOG=$MOTD.log
     echo "--------------------------------------------------------------------------------------------"
 ) > $LIVE_LOG
 
-
 (
     echo 'sudo az login --identity 1> /dev/null'
     echo 'sudo az aks get-credentials --name "${AKS_CLUSTER_NAME}" --resource-group "${RG_NAME}" --admin 1> /dev/null'
-    echo "[ -f $LIVE_LOG ] &&  tail -n 1000 -f $LIVE_LOG"
+    echo "[ -f $LIVE_LOG ] && tail -n 1000 -f $LIVE_LOG"
 )  >> /etc/bash.bashrc
 
 set -e -o pipefail
@@ -133,7 +151,7 @@ detection_uri(){
 
 (
     echo "--------------------------------------------------------------------------------------------"
-    echo "Demo initialization completed - Run 'bash' to initialize shell"
+    echo "Demo initialization completed"
     echo "--------------------------------------------------------------------------------------------"
     echo "vulnerable.example.com is available at http://$(get_vulnerable_app_ip)/"
     echo "detections will appear at $(detection_uri)"
@@ -142,15 +160,19 @@ detection_uri(){
     echo "  # to get all running pods on the cluster"
     echo "  sudo kubectl get pods --all-namespaces"
     echo "  # to get Falcon agent/host ID of vulnerable.example.com"
-    echo "  sudo kubectl exec deploy/vulnerable.example.com -c crowdstrike-falcon-container -- falconctl -g --aid"
-    echo "  # to view Falcon injector logs"
-    echo "  sudo kubectl logs -n falcon-system deploy/injector"
+    echo "  sudo kubectl exec $(sudo kubectl get pods -n falcon-system | awk 'FNR > 1' | awk '{print $1}') \\"
+    echo "        -c falcon-node-sensor -n falcon-system -- falconctl  -g --aid"
+    echo "  # to view Falcon Helm deployed pods"
+    echo "  sudo kubectl get pods -n falcon-system"
     echo "  # to uninstall the vulnerable.example.com"
     echo "  sudo kubectl delete -f /yaml/vulnerable.example.yaml"
-    echo "  # to uninstall the falcon container protection"
-    echo "  sudo kubectl delete -f /yaml/injector.yaml"
+    echo "  # List Helm applications "
+    echo "  sudo helm list -A"
+    echo "  # Uninstall falcon-helm application "
+    echo "  sudo helm uninstall falcon-helm -n falcon-system " 
     echo "--------------------------------------------------------------------------------------------"
 ) >> $LIVE_LOG
+
 
 mv -f $LIVE_LOG $MOTD
 

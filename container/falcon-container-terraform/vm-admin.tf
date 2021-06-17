@@ -19,7 +19,7 @@ resource "azurerm_network_security_group" "vm-nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = var.your_ip_address
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
   tags = var.tags
@@ -54,7 +54,11 @@ resource "azurerm_linux_virtual_machine" "linux" {
     azurerm_network_interface.net-interface.id,
   ]
 
-  custom_data = base64encode(data.template_file.admin-vm-script.rendered)
+  custom_data = base64encode(
+    length(data.template_file.admin-vm-script[*]) > 0
+    ? data.template_file.admin-vm-script[0].rendered
+    : data.template_file.admin-vm-script-ds[0].rendered
+    )
 
   admin_ssh_key {
     username   = "azadmin"
@@ -81,7 +85,21 @@ resource "azurerm_linux_virtual_machine" "linux" {
 }
 
 data "template_file" "admin-vm-script" {
+  count = var.deploy_lumos ? 1 : 0
   template = file("vm-admin.sh.tpl")
+  
+  vars = {
+    AKS_CLUSTER_NAME = azurerm_kubernetes_cluster.aks.name
+    ACR_LOGIN_SERVER = azurerm_container_registry.acr.login_server
+    RG_NAME = azurerm_resource_group.resource-group.name
+    VAULT_NAME = azurerm_key_vault.key_vault.name
+  }
+}
+
+data "template_file" "admin-vm-script-ds" {
+  count = var.deploy_lumos ? 0 : 1
+  template = file("vm-admin.ds.sh.tpl")
+  
   vars = {
     AKS_CLUSTER_NAME = azurerm_kubernetes_cluster.aks.name
     ACR_LOGIN_SERVER = azurerm_container_registry.acr.login_server

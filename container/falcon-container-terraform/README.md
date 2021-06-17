@@ -35,6 +35,12 @@ wget https://raw.githubusercontent.com/mccbryan3/Cloud-Azure/falcon-container-te
 /bin/bash demo up
 ```
 
+NOTE:
+
+* This demo will prompt for the required API Client ID, Secret and CID for your falcon platform.
+* This demo will also prompt on whether to install the LUMOS (falcon-container) sensor
+    * If you choose not to install LUMOS the Kernel Mode Falcon-Node-Sensor will be deployed via Helm Chart
+
 ### Tear Down
 
 NOTE: This demo will place you in a session to the `helper` VM which you must exit to tear down the environment.
@@ -45,8 +51,9 @@ cd ~/falcon-container-terraform && /bin/bash/demo down
 
 ### Developer guide
 
- - Get access to the admin VM that manages the AKS
+ - Get access to the admin VM that manages the AKS environment
 ```
+cd ~/falcon-container-terraform
 ssh azadmin@$(terraform output vm_public_ip | tr -d '"') -i ~/.ssh/container_lab_ssh_key
 ```
 
@@ -61,3 +68,4 @@ tail /etc/motd.log
 ### Known limitations
 
  - This is early version. Please report or even fix issues.
+ - This code is not intended to be run consecutively. Subsequent runs may fail if clean up is not performed.

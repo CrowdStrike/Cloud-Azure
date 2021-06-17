@@ -62,4 +62,3 @@ resource "azurerm_key_vault_secret" "falcon_cloud" {
   value        = "${var.falcon_cloud}"
   key_vault_id = azurerm_key_vault.key_vault.id
 }
-
