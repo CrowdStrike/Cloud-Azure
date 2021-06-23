@@ -33,8 +33,8 @@ EOF
 
 # Main demo up function
 demo_up() {
-    BRANCH=falcon-container-terraform
-    GITHUB_ORG=mccbryan3
+    BRANCH=master
+    GITHUB_ORG=CrowdStrike
     
     [ -d ~/cloud-azure ] || (cd "$HOME" && git clone --branch $BRANCH --depth 1 https://github.com/$GITHUB_ORG/cloud-azure)
     [ -d ~/falcon-container-terraform ] || (ln -sf $HOME/cloud-azure/container/falcon-container-terraform $HOME/falcon-container-terraform)
