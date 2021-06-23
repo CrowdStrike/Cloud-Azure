@@ -125,9 +125,9 @@ detection_uri(){
             falconctl -g --aid | awk -F '"' '{print $2}')
     if [ $FALCON_CLOUD == 'us-2' ]
     then
-        echo "https://falcon.us-2.crowdstrike.com/activity/detections/?filter=device_id:%27$aid%27&groupBy=none"
+        echo "https://falcon.us-2.crowdstrike.com/activity/detections?groupBy=none&sortBy=date%3Adesc"
     else
-        echo "https://falcon.crowdstrike.com/activity/detections/?filter=device_id:%27$aid%27&groupBy=none"
+        echo "https://falcon.crowdstrike.com/activity/detections?groupBy=none&sortBy=date%3Adesc"
     fi
 }
 
