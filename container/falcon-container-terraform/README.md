@@ -29,7 +29,7 @@ User then may
  - Paste the following to your cloud shell
  
 ```
-wget https://raw.githubusercontent.com/mccbryan3/Cloud-Azure/falcon-container-terraform/container/falcon-container-terraform/demo
+wget https://raw.githubusercontent.com//CrowdStrike/Cloud-Azure/master/container/falcon-container-terraform/demo
 ```
 ```
 /bin/bash demo up
