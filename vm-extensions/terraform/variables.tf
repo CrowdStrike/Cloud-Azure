@@ -1,6 +1,5 @@
 variable "instance_name" {
 	type = string
-	default = "agent-install-test"
 }
 
 variable "vnetName" {
@@ -37,10 +36,6 @@ variable "client_id" {
 }
 
 variable "client_secret" {
-    type = string
-}
-
-variable "vm_name" {
     type = string
 }
 

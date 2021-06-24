@@ -44,18 +44,17 @@ resource "azurerm_virtual_machine_extension" "myterraformvm" {
   publisher = "Microsoft.Azure.Extensions"
   type = "CustomScript"
   type_handler_version = "2.0"
-
   settings = <<SETTINGS
-  { 
-    "protectedSettings": 
-    { 
-      "fileUris": [ 
+  { "fileUris": [ 
           "https://raw.githubusercontent.com/mccbryan3/Cloud-Azure/vm-extension-fix/vm-extensions/scripts/start-falcon-bootstrap.sh"
-        ],
-        "commandToExecute": "./start-falcon-bootstrap.sh --cid=${var.cid} --client_id=${var.client_id} --client_secret=${var.client_secret}"
-    }
+        ]  
   }
   SETTINGS
+  protected_settings = <<PROTECTED
+  {
+    "commandToExecute": "sudo /bin/bash start-falcon-bootstrap.sh --cid=${var.cid} --client_id=${var.client_id} --client_secret=${var.client_secret} --falcon_cloud=${var.falcon_cloud}"
+  }
+  PROTECTED
 
   tags = {
     environment = "Development"
