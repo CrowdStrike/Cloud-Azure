@@ -34,10 +34,10 @@ Prerequisites
 CWP
 LUMOS
 MOTD
-kuberentes 
+kubernetes 
 Adminstrator 
-loginServer 
-UI 
+loginServer
+UI
 onwards
 vulnapp
 ABCDEF
