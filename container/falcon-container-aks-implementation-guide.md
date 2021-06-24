@@ -4,7 +4,7 @@ This guide works through the creation of a new Azure Kubernetes Service (AKS) cl
 
 No prior Kubernetes or Falcon knowledge is needed to follow this guide. The first sections of this guide focus on the creation of an Azure Container Registry (ACR) and an AKS cluster, however, these sections may be skipped if you have access to an existing registry and cluster.
 
-This was tested with Ubuntu 18-based kubernetes v1.18.14 clusters. For the latest supported operating systems and kuberentes versions, reference the latest falcon-sensor support [documentation](https://falcon.crowdstrike.com/documentation/146/falcon-container-sensor-for-linux).
+This was tested with Ubuntu 18-based Kubernetes v1.18.14 clusters. For the latest supported operating systems and Kubernetes versions, reference the latest falcon-sensor support [documentation](https://falcon.crowdstrike.com/documentation/146/falcon-container-sensor-for-linux).
 
 Time needed to follow this guide: 45 minutes.
 
