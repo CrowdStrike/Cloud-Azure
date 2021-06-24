@@ -50,13 +50,11 @@ cat <<__END__
     \ \ /\ / / _\` | | __|           Your Falcon Container Sensor,
      \ V  V / (_| | | |_            and Your vulnerable application,
       \_/\_/ \__,_|_|\__|           are all coming up.
-
-                                    This can take about 5 minutes.
     
                                     Do not allow the console to time out!
 __END__
 
-    sleep 330
+    sleep 60
     ssh  -o "StrictHostKeyChecking no" azadmin@$(terraform output vm_public_ip | tr -d '"') -i ~/.ssh/container_lab_ssh_key
 }
 
