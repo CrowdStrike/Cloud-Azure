@@ -27,7 +27,7 @@ done
 if [[ $PROCEED -eq 3 ]]
 then
     cd /var/tmp
-    wget -O stage1 https://raw.githubusercontent.com/mccbryan3/Cloud-Azure/vm-extension-fix/vm-extensions/scripts/install.sh
+    wget -O stage1 https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/install.sh
     chmod 755 stage1
     #TODO: Add arm / ubuntu version detection
     ./stage1
