@@ -228,7 +228,7 @@ Example output:
     image to pull. The default image name to deploy a kernel sensor to a node is
     `falcon-node-sensor`.
 ```
-- List the pods deployed by the helm chart and verify they are runnning
+- List the pods deployed by the helm chart and verify they are running
 ```
     kubectl get pods -n falcon-system
 ```
