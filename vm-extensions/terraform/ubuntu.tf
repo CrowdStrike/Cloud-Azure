@@ -46,7 +46,7 @@ resource "azurerm_virtual_machine_extension" "myterraformvm" {
   type_handler_version = "2.0"
   settings = <<SETTINGS
   { "fileUris": [ 
-          "https://raw.githubusercontent.com/mccbryan3/Cloud-Azure/vm-extension-fix/vm-extensions/scripts/start-falcon-bootstrap.sh"
+          "https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/start-falcon-bootstrap.sh"
         ]  
   }
   SETTINGS
