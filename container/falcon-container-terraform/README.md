@@ -46,7 +46,7 @@ NOTE:
 NOTE: This demo will place you in a session to the `helper` VM which you must exit to tear down the environment.
 
 ```
-cd ~/falcon-container-terraform && /bin/bash/demo down
+cd ~/falcon-container-terraform && /bin/bash demo down
 ```
 
 ### Developer guide
