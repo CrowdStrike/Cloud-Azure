@@ -39,22 +39,25 @@ resource "azurerm_linux_virtual_machine" "myterraformvm" {
 }
 
 resource "azurerm_virtual_machine_extension" "myterraformvm" {
-  name = "hostname"
+  name = "falcon-sensor-install-linux"
   virtual_machine_id = azurerm_linux_virtual_machine.myterraformvm.id
   publisher = "Microsoft.Azure.Extensions"
   type = "CustomScript"
   type_handler_version = "2.0"
 
   settings = <<SETTINGS
-    {
-      "fileUris": [
-          "https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/start-falcon-bootstrap.sh"
-      ],
-      "commandToExecute": "./start-falcon-bootstrap.sh --cid=${var.cid} --client_id=${var.client_id} --client_secret=${var.client_secret}"
+  { 
+    "protectedSettings": 
+    { 
+      "fileUris": [ 
+          "https://raw.githubusercontent.com/mccbryan3/Cloud-Azure/vm-extension-fix/vm-extensions/scripts/start-falcon-bootstrap.sh"
+        ],
+        "commandToExecute": "./start-falcon-bootstrap.sh --cid=${var.cid} --client_id=${var.client_id} --client_secret=${var.client_secret}"
     }
+  }
   SETTINGS
 
   tags = {
-    environment = "Production"
+    environment = "Development"
   }
 }

@@ -40,6 +40,10 @@ variable "client_secret" {
     type = string
 }
 
+variable "vm_name" {
+    type = string
+}
+
 variable "falcon_cloud" {
     type = string
     default = "us-1"
