@@ -54,7 +54,7 @@ cat <<__END__
                                     Do not allow the console to time out!
 __END__
 
-    sleep 60
+    sleep 120
     ssh  -o "StrictHostKeyChecking no" azadmin@$(terraform output vm_public_ip | tr -d '"') -i ~/.ssh/container_lab_ssh_key
 }
 
