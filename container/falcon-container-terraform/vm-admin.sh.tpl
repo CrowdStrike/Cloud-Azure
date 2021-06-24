@@ -134,6 +134,7 @@ detection_uri(){
 (
     echo "--------------------------------------------------------------------------------------------"
     echo "Demo initialization completed - Run 'bash' to initialize shell"
+    echo "Run 'bash' to reinitialize shell if commands do not work"
     echo "--------------------------------------------------------------------------------------------"
     echo "vulnerable.example.com is available at http://$(get_vulnerable_app_ip)/"
     echo "detections will appear at $(detection_uri)"
