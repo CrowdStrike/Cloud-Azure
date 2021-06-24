@@ -8,7 +8,7 @@ Time needed to follow this guide: 45 minutes.
 
 ## Pre-requisites
 
-- Existing Azure Subscription and Global Adminstrator permissions
+- Existing Azure Subscription and Global Administrator permissions
 - You will need a workstation to complete the installation steps below
   * These steps have been tested on Linux and should also work with OSX
 - Install [docker](https://www.docker.com/products/docker-desktop) container runtime
