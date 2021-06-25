@@ -18,8 +18,14 @@ the way of env variables. Following variables may be used.
 EOF
 }
 
-FALCON_CLOUD=".${FALCON_CLOUD}"
-CS_API_BASE="api${FALCON_CLOUD}.crowdstrike.com"
+## Setup the base API url
+unset Z_FALCON_CLOUD
+if [ ! -z $FALCON_CLOUD ]
+then 
+    Z_FALCON_CLOUD=".${FALCON_CLOUD}"
+fi
+CS_API_BASE="api${Z_FALCON_CLOUD}.crowdstrike.com"
+
 
 main() {
     if [ -n "$1" ]; then
