@@ -1,6 +1,6 @@
 #!/bin/bash
 # TODO: support of installation tokens
-# TODO: support of amazon on arm
+# TODO: support of arm
 
 print_usage() {
     cat <<EOF
