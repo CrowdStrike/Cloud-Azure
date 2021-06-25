@@ -46,13 +46,14 @@ resource "azurerm_virtual_machine_extension" "myterraformvm" {
   type_handler_version = "2.0"
   settings = <<SETTINGS
   { "fileUris": [ 
-          "https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/start-falcon-bootstrap.sh"
+          "https://raw.githubusercontent.com/mccbryan3/Cloud-Azure/vm-extension-fix/vm-extensions/scripts/install.sh"
         ]  
   }
   SETTINGS
+  ## TODO: work the variables into KeyVault
   protected_settings = <<PROTECTED
   {
-    "commandToExecute": "sudo /bin/bash start-falcon-bootstrap.sh --cid=${var.cid} --client_id=${var.client_id} --client_secret=${var.client_secret} --falcon_cloud=${var.falcon_cloud}"
+    "commandToExecute": "export FALCON_CID=${var.cid} && export FALCON_CLIENT_ID=${var.client_id} && export FALCON_CLIENT_SECRET=${var.client_secret} && export FALCON_CLOUD=${var.falcon_cloud} && /bin/bash install.sh"
   }
   PROTECTED
 
