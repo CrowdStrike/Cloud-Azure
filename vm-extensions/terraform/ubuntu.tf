@@ -13,12 +13,12 @@ resource "azurerm_linux_virtual_machine" "myterraformvm" {
     storage_account_type = "Premium_LRS"
   }
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer = "UbuntuServer"
-    sku = "18.04-LTS"
-    version = "latest"
-  }
+source_image_reference {
+  publisher = "Canonical"
+  offer = "UbuntuServer"
+  sku = "18.04-LTS"
+  version = "latest"
+}
 
   computer_name = "${var.instance_name}-ubuntu"
   admin_username = "azureuser"
@@ -46,7 +46,7 @@ resource "azurerm_virtual_machine_extension" "myterraformvm" {
   type_handler_version = "2.0"
   settings = <<SETTINGS
   { "fileUris": [ 
-          "https://raw.githubusercontent.com/mccbryan3/Cloud-Azure/vm-extension-fix/vm-extensions/scripts/install.sh"
+          "https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/install.sh"
         ]  
   }
   SETTINGS
