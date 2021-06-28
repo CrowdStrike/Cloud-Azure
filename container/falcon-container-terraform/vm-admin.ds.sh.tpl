@@ -138,15 +138,13 @@ set -e -o pipefail
 main "$@" >> $LIVE_LOG 2>&1
 
 detection_uri(){
-    aid=$(
-        sudo kubectl exec deploy/vulnerable.example.com -c falcon-container -- \
-            falconctl -g --aid | awk -F '"' '{print $2}')
-    if [ $FALCON_CLOUD == 'us-2' ]
-    then
-        echo "https://falcon.us-2.crowdstrike.com/activity/detections?groupBy=none&sortBy=date%3Adesc"
-    else
-        echo "https://falcon.crowdstrike.com/activity/detections?groupBy=none&sortBy=date%3Adesc"
+    unset Z_FALCON_CLOUD
+    if [ ! -z $FALCON_CLOUD ]
+    then 
+        Z_FALCON_CLOUD=".${FALCON_CLOUD}"
     fi
+    CS_BASE="falcon${Z_FALCON_CLOUD}.crowdstrike.com"
+    echo "https://${CS_BASE}/activity/detections?groupBy=none&sortBy=date%3Adesc"
 }
 
 (
