@@ -121,12 +121,12 @@ main "$@" >> $LIVE_LOG 2>&1
 
 detection_uri(){
     unset Z_FALCON_CLOUD
-    if [ ! -z $FALCON_CLOUD ]
+    if [ ! -z $FALCON_CLOUD ] && [ $FALCON_CLOUD != "us-1" ]
     then 
-        Z_FALCON_CLOUD=".${FALCON_CLOUD}"
+        Z_FALCON_CLOUD=".$FALCON_CLOUD"
     fi
-    CS_BASE="falcon${Z_FALCON_CLOUD}.crowdstrike.com"
-    echo "https://${CS_BASE}/activity/detections?groupBy=none&sortBy=date%3Adesc"
+    CS_BASE="falcon$Z_FALCON_CLOUD.crowdstrike.com"
+    echo "https://$CS_BASE/activity/detections?groupBy=none&sortBy=date%3Adesc"
 }
 
 (
