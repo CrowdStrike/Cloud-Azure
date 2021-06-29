@@ -44,7 +44,3 @@ variable "falcon_cloud" {
     default = ""
     description = "Place value of falcon cloud platform variable if not us-1"
 }
-
-variable "password"{
-    type=string
-}
