@@ -112,4 +112,4 @@ resource "azurerm_virtual_machine_extension" "myterraformvm" {
 }
 ```
 
-A working example is provided [here](https://github.com/CrowdStrike/Cloud-Azure/tree/master/vm-extensions/terraform)
+A working example is provided [here](terraform)

@@ -6,12 +6,17 @@ Create a file `<filename>.tfvars`
 
 Add the following to the file
 
+NOTE: You may also choose to use environment variables as TF_VAR_<variable_name>
+
 ```code
 cid = "<Your Customer ID>"
 
 client_id  = "<Api CLIENT ID>"
 
 client_secret = "Api SECRET"
+
+instance_name = "unique_instance_name"
+
 ```
 
 Apply the template 

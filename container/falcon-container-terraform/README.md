@@ -16,7 +16,7 @@ User then may
  * Visit vulnerable.example.com application and exploit it through the web interface
  * Show detections in Falcon Console
 
-### Prerequsites
+### Prerequisites
  - Authenticated access to Azure
  - Have Containers enabled in Falcon console (CWP subscription)
  - Falcon CID and API key and secret with Sensor Download

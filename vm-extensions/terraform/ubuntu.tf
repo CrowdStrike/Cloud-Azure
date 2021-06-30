@@ -13,12 +13,12 @@ resource "azurerm_linux_virtual_machine" "myterraformvm" {
     storage_account_type = "Premium_LRS"
   }
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer = "UbuntuServer"
-    sku = "18.04-LTS"
-    version = "latest"
-  }
+source_image_reference {
+  publisher = "Canonical"
+  offer = "UbuntuServer"
+  sku = "18.04-LTS"
+  version = "latest"
+}
 
   computer_name = "${var.instance_name}-ubuntu"
   admin_username = "azureuser"
@@ -39,22 +39,25 @@ resource "azurerm_linux_virtual_machine" "myterraformvm" {
 }
 
 resource "azurerm_virtual_machine_extension" "myterraformvm" {
-  name = "hostname"
+  name = "falcon-sensor-install-linux"
   virtual_machine_id = azurerm_linux_virtual_machine.myterraformvm.id
   publisher = "Microsoft.Azure.Extensions"
   type = "CustomScript"
   type_handler_version = "2.0"
-
   settings = <<SETTINGS
-    {
-      "fileUris": [
-          "https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/start-falcon-bootstrap.sh"
-      ],
-      "commandToExecute": "./start-falcon-bootstrap.sh --cid=${var.cid} --client_id=${var.client_id} --client_secret=${var.client_secret}"
-    }
+  { "fileUris": [ 
+          "https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/install.sh"
+        ]  
+  }
   SETTINGS
+  ## TODO: work the variables into KeyVault
+  protected_settings = <<PROTECTED
+  {
+    "commandToExecute": "export FALCON_CID=${var.cid} && export FALCON_CLIENT_ID=${var.client_id} && export FALCON_CLIENT_SECRET=${var.client_secret} && export FALCON_CLOUD=${var.falcon_cloud} && /bin/bash install.sh"
+  }
+  PROTECTED
 
   tags = {
-    environment = "Production"
+    environment = "Development"
   }
 }

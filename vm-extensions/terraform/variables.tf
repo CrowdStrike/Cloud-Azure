@@ -1,6 +1,5 @@
 variable "instance_name" {
 	type = string
-	default = "agent-install-test"
 }
 
 variable "vnetName" {
@@ -40,8 +39,8 @@ variable "client_secret" {
     type = string
 }
 
-
-
-variable "password"{
-    type=string
+variable "falcon_cloud" {
+    type = string
+    default = ""
+    description = "Place value of falcon cloud platform variable if not us-1"
 }
