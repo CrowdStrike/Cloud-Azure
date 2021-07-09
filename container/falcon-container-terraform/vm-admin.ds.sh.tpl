@@ -37,7 +37,7 @@ download_build_falcon_sensor(){
     pushd "$tmpdir" > /dev/null
       git clone https://github.com/CrowdStrike/Dockerfiles.git
       cd Dockerfiles
-      falcon_sensor_download --os-name=Ubuntu --os-version=14/16/18/20 --sensor-version=latest
+      falcon_sensor_download --os-name=Ubuntu --os-version=16/18/20 --sensor-version=latest
       local_repo=falcon-node-sensor
       tag=ubuntu
       local_tag="$local_repo:$tag"
