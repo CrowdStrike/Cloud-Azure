@@ -33,7 +33,7 @@ EOF
 
 # Main demo up function
 demo_up() {
-    BRANCH=master
+    BRANCH=main
     GITHUB_ORG=CrowdStrike
     
     [ -d ~/cloud-azure ] || (cd "$HOME" && git clone --branch $BRANCH --depth 1 https://github.com/$GITHUB_ORG/cloud-azure)
