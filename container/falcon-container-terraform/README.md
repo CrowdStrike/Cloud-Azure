@@ -27,7 +27,7 @@ User then may
  - Verify that your are on the correct subscription
  - Verify that your identity in upper right corner is correct)
  - Paste the following to your cloud shell
- 
+
 ```
 wget https://raw.githubusercontent.com//CrowdStrike/Cloud-Azure/master/container/falcon-container-terraform/demo
 ```

@@ -140,7 +140,7 @@ main "$@" >> $LIVE_LOG 2>&1
 detection_uri(){
     unset Z_FALCON_CLOUD
     if [ ! -z $FALCON_CLOUD ] && [ $FALCON_CLOUD != "us-1" ]
-    then 
+    then
         Z_FALCON_CLOUD=".$FALCON_CLOUD"
     fi
     CS_BASE="falcon$Z_FALCON_CLOUD.crowdstrike.com"
@@ -168,7 +168,7 @@ detection_uri(){
     echo "  # List Helm applications "
     echo "  sudo helm list -A"
     echo "  # Uninstall falcon-helm application "
-    echo "  sudo helm uninstall falcon-helm -n falcon-system " 
+    echo "  sudo helm uninstall falcon-helm -n falcon-system "
     echo "--------------------------------------------------------------------------------------------"
 ) >> $LIVE_LOG
 

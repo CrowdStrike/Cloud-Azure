@@ -1,4 +1,4 @@
-# The container registry name needs to be globally 
+# The container registry name needs to be globally
 # unique and may be a stciking point.
 resource "azurerm_container_registry" "acr" {
   name                          = "${var.prefix}ContainerRegistry${var.suffix}01"

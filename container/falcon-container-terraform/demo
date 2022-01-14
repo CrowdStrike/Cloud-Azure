@@ -35,12 +35,12 @@ EOF
 demo_up() {
     BRANCH=main
     GITHUB_ORG=CrowdStrike
-    
+
     [ -d ~/cloud-azure ] || (cd "$HOME" && git clone --branch $BRANCH --depth 1 https://github.com/$GITHUB_ORG/cloud-azure)
     [ -d ~/falcon-container-terraform ] || (ln -sf $HOME/cloud-azure/container/falcon-container-terraform $HOME/falcon-container-terraform)
     cd ~/falcon-container-terraform
 
-    terraform init 
+    terraform init
     terraform apply
 
 cat <<__END__
@@ -50,7 +50,7 @@ cat <<__END__
     \ \ /\ / / _\` | | __|           Your Falcon Container Sensor,
      \ V  V / (_| | | |_            and Your vulnerable application,
       \_/\_/ \__,_|_|\__|           are all coming up.
-    
+
                                     Do not allow the console to time out!
 __END__
 

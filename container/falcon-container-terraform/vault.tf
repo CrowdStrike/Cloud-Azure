@@ -14,11 +14,11 @@ resource "azurerm_key_vault" "key_vault" {
   object_id = var.object_id
   certificate_permissions = [ "get" ]
   storage_permissions = [ "get" ]
-  key_permissions = [ 
-    "get", 
-    "create" 
+  key_permissions = [
+    "get",
+    "create"
     ]
-  secret_permissions = [ 
+  secret_permissions = [
     "Set",
     "Get",
     "list",

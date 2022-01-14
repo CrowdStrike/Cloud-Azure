@@ -242,7 +242,7 @@ Example output:
 - (optional) Verify that given pod has registered with CrowdStrike Falcon and received unique identifier.
 ```
      for i in $(kubectl get pods -n falcon-system | awk 'FNR > 1' | awk '{print $1}')
-     do 
+     do
               echo "$i - $(kubectl exec $i -n falcon-system -c falcon-node-sensor -- falconctl -g --aid)"
      done
 ```
@@ -254,7 +254,7 @@ Example output:
 - Note that the value returned should be false if running on supported kernel and platform versions.
 ```
      for i in $(kubectl get pods -n falcon-system | awk 'FNR > 1' | awk '{print $1}')
-     do 
+     do
            echo "$i - $(kubectl exec $i -n falcon-system -c falcon-node-sensor -- falconctl -g --rfm-state)"
      done
 ```

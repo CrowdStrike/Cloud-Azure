@@ -80,14 +80,14 @@ resource "azurerm_linux_virtual_machine" "linux" {
   identity {
     type = "SystemAssigned"
   }
-  
+
   tags = var.tags
 }
 
 data "template_file" "admin-vm-script" {
   count = var.deploy_lumos ? 1 : 0
   template = file("vm-admin.sh.tpl")
-  
+
   vars = {
     AKS_CLUSTER_NAME = azurerm_kubernetes_cluster.aks.name
     ACR_LOGIN_SERVER = azurerm_container_registry.acr.login_server
@@ -99,7 +99,7 @@ data "template_file" "admin-vm-script" {
 data "template_file" "admin-vm-script-ds" {
   count = var.deploy_lumos ? 0 : 1
   template = file("vm-admin.ds.sh.tpl")
-  
+
   vars = {
     AKS_CLUSTER_NAME = azurerm_kubernetes_cluster.aks.name
     ACR_LOGIN_SERVER = azurerm_container_registry.acr.login_server
