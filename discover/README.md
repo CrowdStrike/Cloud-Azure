@@ -4,11 +4,11 @@
 
 Provides insight into your Azure virtual machine footprint, so you can secure all workloads, uncover and mitigate risks and reduce the attack surface.
 
-Discover for Azure utilises Azure Resource Graph 
+Discover for Azure utilises Azure Resource Graph
 
 Azure Resource Graph, provides the following capabilities
 •	Access the properties returned by resource providers without needing to make individual calls to each resource provider.
-•	View the last 14 days of change history made to the resource to see what properties changed and when. 
+•	View the last 14 days of change history made to the resource to see what properties changed and when.
 
 When an Azure resource is updated, Resource Graph is notified by Resource Manager of the change. Resource Graph then updates its database. Resource Graph also does a regular full scan. This scan ensures that Resource Graph data is current if there are missed notifications or when a resource is updated outside of Resource Manager.
 
@@ -27,32 +27,29 @@ The baseline task runs every 24 hours and invokes a ResourceGraph API request to
 
 The change task runs every xx minutes cadence and invokes a resourceChange API request to capture the resource changes made throughout the day for resources relevant to Discover for Azure.
 
- 
 # Authentication Roles and Permissions
-The CrowdStrike Discover for Cloud service will use an Azure Service Principal to discover resources and monitor changes to those resources over time. 
+The CrowdStrike Discover for Cloud service will use an Azure Service Principal to discover resources and monitor changes to those resources over time.
 
 An Azure service principal is an identity created for use with applications, hosted services, and automated tools to access Azure resources. This access is restricted by the roles assigned to the service principal, giving you control over which resources can be accessed and at which level.
 
-The Account Onboarding process involves the creation of a service principal for each Azure tenant.  The service principal has the “READER” role assigned to it and uses certificate-based authentication. 
+The Account Onboarding process involves the creation of a service principal for each Azure tenant.  The service principal has the “READER” role assigned to it and uses certificate-based authentication.
 
 __*“az ad sp create-for-rbac --name CrowdStrikeCSPM --cert XXXX”*__
 
-A tenant will contain one or more subscriptions. 
+A tenant will contain one or more subscriptions.
 The “READER” role should be assigned to each subscription under the tenant.
 
 __*"az role assignment create --role acdd72a7-3385-48ef-bd42-f606fba81ae7 --assignee ${CLIENT_ID} --subscription xxxxxxx"*__
 
 __*"az role assignment create --role acdd72a7-3385-48ef-bd42-f606fba81ae7 --assignee ${CLIENT_ID} --subscription yyyyyyy"*__
 
-Note:  In order to create a service principal, the user or process must be authenticated with Azure and have “GLOBAL ADMINISTRATOR” permissions. 
+Note:  In order to create a service principal, the user or process must be authenticated with Azure and have “GLOBAL ADMINISTRATOR” permissions.
 https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles#company-administrator-permissions
 
 
- 
 # Account Onboarding Workflow
 
 ![Account Onboarding)](Discover/images/Slide1.png)
- 
 
 1)	Customer sends an API POST request to https://api.crowdstrike.com/cloud-connect-azure/entities/account/v1.	
 2)	CrowdStrike Azure registration service generates a public/private certificate key pair.
@@ -63,7 +60,7 @@ https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/direc
 
 # Resource Discovery
 
-The full scan and periodic scan both use the OAuth2 client assertion mechanism to authenticate to Azure and perform API requests to the Azure Resource Graph. 
+The full scan and periodic scan both use the OAuth2 client assertion mechanism to authenticate to Azure and perform API requests to the Azure Resource Graph.
 
 ![Resource Discovery)](Discover/images/Slide2.png)
 

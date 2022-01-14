@@ -1,6 +1,6 @@
 # Virtual machine extensions and features for Linux
 
-### CrowdStrike Falcon Install - Terraform Implementation 
+### CrowdStrike Falcon Install - Terraform Implementation
 
 Create a file `<filename>.tfvars`
 
@@ -9,17 +9,17 @@ Add the following to the file
 NOTE: You may also choose to use environment variables as TF_VAR_<variable_name>
 
 ```code
-cid = "<Your Customer ID>"
+cid = "<FALCON_Customer_ID>"
 
-client_id  = "<Api CLIENT ID>"
+client_id  = "<FALCON_CLIENT_ID>"
 
-client_secret = "Api SECRET"
+client_secret = "FALCON_CLIENT_SECRET"
 
 instance_name = "unique_instance_name"
 
 ```
 
-Apply the template 
+Apply the template
 
 ```terraform
 terraform init

@@ -5,19 +5,19 @@
     "cid":{
       "type":"string",
       "metadata":{
-        "description": "Customer CID"
+        "description": "Falcon Customer CID"
       }
     },
     "clientId":{
       "type":"securestring",
       "metadata":{
-        "description": "Customer API Client ID"
+        "description": "Falcon API Client ID"
       }
     },
     "clientSecret":{
       "type":"securestring",
       "metadata":{
-        "description": "Customer API Secret"
+        "description": "Falcon API Secret"
       }
     },
     "dnsNameForPublicIP": {
@@ -274,15 +274,13 @@
         "type": "CustomScript",
         "typeHandlerVersion": "2.0",
         "autoUpgradeMinorVersion": true,
-        "settings": {
+        "protectedSettings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/CrowdStrike/Cloud-Azure/master/vm-extensions/scripts/start-falcon-bootstrap.sh"
+            "https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh"
           ],
-          
-          "commandToExecute": "[concat('bash start-falcon-bootstrap.sh --cid=', parameters('cid'), ' --client_id=', parameters('clientId'), ' --client_secret=', parameters('clientSecret'))]"
+          "commandToExecute": "[concat('export FALCON_CID=', parameters('cid'), ' && export FALCON_CLIENT_ID=', parameters('clientId'), ' && export FALCON_CLIENT_SECRET=', parameters('clientSecret'), ' && /bin/bash falcon-linux-deploy.sh')]"
         }
       }
     }
-    
   ]
 }
