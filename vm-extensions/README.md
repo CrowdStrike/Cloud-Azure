@@ -70,7 +70,14 @@ When the extension runs correctly, the output is similar to the following exampl
 
 VM extensions can be added to an Azure Resource Manager template and executed with the deployment of the template. When you deploy an extension with a template, you can create fully configured Azure deployments.
 
-For more information, see the full [Resource Manager template](https://github.com/CrowdStrike/Cloud-Azure/blob/main/vm-extensions/arm/linux/Ubuntu-18).
+```azurecli
+az deployment group create \                                                                                                                                                                                                                                   (update_arm✱) 
+  --name ExampleDeployment \
+  --resource-group ExampleGroup \
+  --template-file ./linux.json
+```
+
+For more information, see the full [Resource Manager template](https://github.com/CrowdStrike/Cloud-Azure/blob/main/vm-extensions/arm/linux/linux.json).
 
 ```json
     {

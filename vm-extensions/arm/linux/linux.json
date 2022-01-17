@@ -4,6 +4,7 @@
   "parameters": {
     "cid":{
       "type":"string",
+      "defaultValue": "",
       "metadata":{
         "description": "Falcon Customer CID"
       }
@@ -22,6 +23,7 @@
     },
     "dnsNameForPublicIP": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "DNS Name for Public IP"
       }
@@ -51,6 +53,13 @@
       "defaultValue": "18.04-LTS",
       "metadata": {
         "description": "Image SKU"
+      }
+    },
+    "imageVersion": {
+      "type": "string",
+      "defaultValue": "latest",
+      "metadata": {
+        "description": "Image Version"
       }
     },
     "vmSize": {
@@ -111,6 +120,13 @@
       "metadata": {
         "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
       }
+    },
+    "disablePasswordAuth": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+      }
     }
   },
   "variables": {
@@ -119,7 +135,7 @@
     "subnet1Prefix": "10.0.0.0/24",
     "publicIPAddressType": "Dynamic",
     "linuxConfiguration": {
-      "disablePasswordAuthentication": true,
+      "disablePasswordAuthentication": "[parameters('disablePasswordAuth')]",
       "ssh": {
         "publicKeys": [
           {
@@ -138,10 +154,7 @@
       "name": "[parameters('publicIPAddressName')]",
       "location": "[parameters('location')]",
       "properties": {
-        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
-        "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
-        }
+        "publicIPAllocationMethod": "[variables('publicIPAddressType')]"
       }
     },
     {
@@ -244,7 +257,7 @@
             "publisher": "[parameters('imagePublisher')]",
             "offer": "[parameters('imageOffer')]",
             "sku": "[parameters('imageSKU')]",
-            "version": "latest"
+            "version": "[parameters('imageVersion')]"
           },
           "osDisk": {
             "name": "[concat(parameters('vmName'),'_OSDisk')]",
