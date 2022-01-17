@@ -662,3 +662,6 @@ yaml
 yml
 VM
 VMs
+VMSS
+vmss
+Virtual
