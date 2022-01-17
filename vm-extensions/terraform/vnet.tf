@@ -12,7 +12,7 @@ resource "azurerm_resource_group" "instancetestrg" {
     location = var.location
 
     tags = {
-        environment = "Terraform Demo"
+        environment = var.env_tags
     }
 }
 
@@ -25,7 +25,7 @@ resource "azurerm_virtual_network" "myterraformnetwork" {
     resource_group_name = azurerm_resource_group.instancetestrg.name
 
     tags = {
-        environment = "Terraform Demo"
+        environment = var.env_tags
     }
 }
 
@@ -45,7 +45,7 @@ resource "azurerm_public_ip" "myterraformpublicip" {
     allocation_method            = "Dynamic"
 
     tags = {
-        environment = "Agent Install Test"
+        environment = var.env_tags
     }
 }
 
@@ -68,7 +68,7 @@ resource "azurerm_network_security_group" "myterraformnsg" {
     }
 
     tags = {
-        environment = "Agent Install Test"
+        environment = var.env_tags
     }
 }
 
@@ -86,7 +86,7 @@ resource "azurerm_network_interface" "myterraformnic" {
     }
 
     tags = {
-        environment = "Terraform Demo"
+        environment = var.env_tags
     }
 }
 
@@ -115,12 +115,12 @@ resource "azurerm_storage_account" "mystorageaccount" {
     account_replication_type    = "LRS"
 
     tags = {
-        environment = "Terraform Demo"
+        environment = var.env_tags
     }
 }
 
 # Create (and display) an SSH key
-resource "tls_private_key" "example_ssh" {
+resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
   rsa_bits = 4096
 }

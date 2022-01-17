@@ -118,16 +118,11 @@ resource "azurerm_virtual_machine_extension" "myterraformvm" {
   publisher = "Microsoft.Azure.Extensions"
   type = "CustomScript"
   type_handler_version = "2.0"
-
-  settings = <<SETTINGS
-  { "fileUris": [
-          "https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh"
-        ]
-  }
-  SETTINGS
-
   protected_settings = <<PROTECTED
   {
+    "fileUris": [
+          "https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh"
+        ],
     "commandToExecute": "export FALCON_CID=${var.cid} && export FALCON_CLIENT_ID=${var.client_id} && export FALCON_CLIENT_SECRET=${var.client_secret} && export FALCON_CLOUD=${var.falcon_cloud} && /bin/bash falcon-linux-deploy.sh"
   }
   PROTECTED
