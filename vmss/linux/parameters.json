@@ -1,0 +1,126 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "clientId": {
+            "value": "123456789f1c4a0d9987a45123456789"
+        },
+        "clientSecret": {
+            "value": "ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "osDiskType": {
+            "value": "Premium_LRS"
+        },
+        "addressPrefixes": {
+            "value": [
+                "172.18.0.0/16"
+            ]
+        },
+        "subnets": {
+            "value": [
+                {
+                    "name": "default",
+                    "properties": {
+                        "addressPrefix": "172.18.0.0/16"
+                    }
+                }
+            ]
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/5a84cb53-b383-44db-bd58-c65ca3dfcb8c/resourceGroups/myResourceGroup/providers/Microsoft.Network/virtualNetworks/myResourceGroup-vnet"
+        },
+        "virtualNetworkName": {
+            "value": "myResourceGroup-vnet"
+        },
+        "networkSecurityGroups": {
+            "value": [
+                {
+                    "name": "basicNsgmyResourceGroup-vnet-nic01",
+                    "id": "/subscriptions/5a84cb53-b383-44db-bd58-c65ca3dfcb8c/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/basicNsgmyResourceGroup-vnet-nic01",
+                    "rules": []
+                }
+            ]
+        },
+        "networkInterfaceConfigurations": {
+            "value": [
+                {
+                    "name": "myResourceGroup-vnet-nic01",
+                    "primary": true,
+                    "subnetId": "/subscriptions/5a84cb53-b383-44db-bd58-c65ca3dfcb8c/resourceGroups/myResourceGroup/providers/Microsoft.Network/virtualNetworks/myResourceGroup-vnet/subnets/default",
+                    "applicationGatewayBackendAddressPools": [],
+                    "loadBalancerBackendAddressPools": [],
+                    "applicationSecurityGroups": [],
+                    "loadBalancerInboundNatPools": [],
+                    "enableAcceleratedNetworking": true,
+                    "nsgName": "basicNsgmyResourceGroup-vnet-nic01",
+                    "nsgId": "/subscriptions/5a84cb53-b383-44db-bd58-c65ca3dfcb8c/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/basicNsgmyResourceGroup-vnet-nic01",
+                    "pipName": ""
+                }
+            ]
+        },
+        "vmName": {
+            "value": "my-vm-name"
+        },
+        "virtualMachineScaleSetName": {
+            "value": "my-azure-vmss-linux"
+        },
+        "singlePlacementGroup": {
+            "value": "false"
+        },
+        "instanceCount": {
+            "value": "10"
+        },
+        "instanceSize": {
+            "value": "Standard_D4s_v3"
+        },
+        "scaleInPolicy": {
+            "value": {
+                "rules": [
+                    "Default"
+                ]
+            }
+        },
+        "overprovision": {
+            "value": false
+        },
+        "upgradePolicy": {
+            "value": "Manual"
+        },
+        "adminUsername": {
+            "value": "azureuser"
+        },
+        "adminPassword": {
+            "value": "azureuser1234!"
+        },
+        "autoScaleDefault": {
+            "value": "10"
+        },
+        "autoScaleMin": {
+            "value": "10"
+        },
+        "autoScaleMax": {
+            "value": "10"
+        },
+        "scaleOutCPUPercentageThreshold": {
+            "value": "75"
+        },
+        "durationTimeWindow": {
+            "value": "10"
+        },
+        "scaleOutInterval": {
+            "value": "1"
+        },
+        "scaleInCPUPercentageThreshold": {
+            "value": "25"
+        },
+        "scaleInInterval": {
+            "value": "1"
+        },
+        "platformFaultDomainCount": {
+            "value": "1"
+        }
+    }
+}
