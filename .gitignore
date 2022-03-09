@@ -1,3 +1,17 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.DS_Store
+bin
+
+# editor and IDE paraphernalia
+.idea
+*.swp
+*.swo
+*~
 # Local .terraform directories
 **/.terraform/*
 
