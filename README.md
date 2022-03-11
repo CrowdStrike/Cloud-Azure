@@ -5,5 +5,4 @@
 | Integration Name | Description |
 |:-|:-|
 | [Container Workload Deployment Guides](container) | Detailed guides on Falcon Sensor deployment patterns for container based workloads. |
-| [VM Extensions](vm-extensions) | Examples for utilizing Linux VM Custom script extensions to deploy Falcon Kernel Mode Sensor to Azure VM Linux workloads |
-| [Virtual Machine Scale Sets (VMSS)](vmss) | Examples for deploying Virtual Machine Scale Sets that install Falcon Sensor on instance launch |
+| [VMs](vm) | Examples for installing Falcon Sensor on different Azure Virtual Machine resources including VM Extensions, Scale Sets, VM Applications, etc. |
