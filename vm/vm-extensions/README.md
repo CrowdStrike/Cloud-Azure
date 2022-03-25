@@ -31,7 +31,7 @@ The following methods can be used to run an extension against an existing VM.
 
 ### Azure CLI
 
-Azure VM extensions can be run against an existing VM with the [az vm extension set](https://docs.microsoft.com/en-us/cli/azure/vm/extension?view=azure-cli-latest#az-vm-extension-set) command. The following example runs the Custom Script extension against a VM named *myVM* in a resource group named *myResourceGroup*. Replace the example resource group name, VM name, and script to run (https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh) with your own information.
+Azure VM extensions can be run against an existing VM with the [az vm extension set](https://docs.microsoft.com/en-us/cli/azure/vm/extension?view=azure-cli-latest#az-vm-extension-set) command. The following example runs the Custom Script extension against a VM named *myVM* in a resource group named *myResourceGroup*. Replace the example resource group name, VM name, and script to run (https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh) with your own information.
 
 ```azurecli
 az vm extension set \
@@ -39,7 +39,7 @@ az vm extension set \
   --vm-name myVM \
   --name customScript \
   --publisher Microsoft.Azure.Extensions \
-  --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh"],"commandToExecute": "export FALCON_CLIENT_ID=123456789f1c4a0d9987a45123456789 && export FALCON_CLIENT_SECRET=ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789 && /bin/bash falcon-linux-deploy.sh"}'
+  --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh"],"commandToExecute": "export FALCON_CLIENT_ID=123456789f1c4a0d9987a45123456789 && export FALCON_CLIENT_SECRET=ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789 && /bin/bash falcon-linux-install.sh"}'
 ```
 
 When the extension runs correctly, the output is similar to the following example:
@@ -71,7 +71,7 @@ When the extension runs correctly, the output is similar to the following exampl
 VM extensions can be added to an Azure Resource Manager template and executed with the deployment of the template. When you deploy an extension with a template, you can create fully configured Azure deployments.
 
 ```azurecli
-az deployment group create \                                                                                                                                                                                                                                   (update_arm✱) 
+az deployment group create \
   --name ExampleDeployment \
   --resource-group ExampleGroup \
   --template-file ./linux.json
@@ -95,10 +95,10 @@ For more information, see the full [Resource Manager template](https://github.co
         "autoUpgradeMinorVersion": true,
         "protectedSettings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh"
+            "https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh"
           ],
 
-          "commandToExecute": "[concat('export FALCON_CID=', parameters('cid'), ' && export FALCON_CLIENT_ID=', parameters('clientId'), ' && export FALCON_CLIENT_SECRET=', parameters('clientSecret'), ' && /bin/bash falcon-linux-deploy.sh')]"
+          "commandToExecute": "[concat('export FALCON_CID=', parameters('cid'), ' && export FALCON_CLIENT_ID=', parameters('clientId'), ' && export FALCON_CLIENT_SECRET=', parameters('clientSecret'), ' && /bin/bash falcon-linux-install.sh')]"
         }
       }
     }
@@ -121,9 +121,9 @@ resource "azurerm_virtual_machine_extension" "myterraformvm" {
   protected_settings = <<PROTECTED
   {
     "fileUris": [
-          "https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh"
+          "https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh"
         ],
-    "commandToExecute": "export FALCON_CID=${var.cid} && export FALCON_CLIENT_ID=${var.client_id} && export FALCON_CLIENT_SECRET=${var.client_secret} && export FALCON_CLOUD=${var.falcon_cloud} && /bin/bash falcon-linux-deploy.sh"
+    "commandToExecute": "export FALCON_CID=${var.cid} && export FALCON_CLIENT_ID=${var.client_id} && export FALCON_CLIENT_SECRET=${var.client_secret} && export FALCON_CLOUD=${var.falcon_cloud} && /bin/bash falcon-linux-install.sh"
   }
   PROTECTED
 

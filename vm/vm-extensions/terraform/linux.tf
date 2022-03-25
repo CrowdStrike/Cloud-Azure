@@ -48,9 +48,9 @@ resource "azurerm_virtual_machine_extension" "myterraformvm" {
   protected_settings = <<PROTECTED
   {
     "fileUris": [
-          "https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh"
+          "https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh"
         ],
-    "commandToExecute": "export FALCON_CID=${var.falcon_cid} && export FALCON_CLIENT_ID=${var.falcon_client_id} && export FALCON_CLIENT_SECRET=${var.falcon_client_secret} && export FALCON_CLOUD=${var.falcon_cloud} && /bin/bash falcon-linux-deploy.sh"
+    "commandToExecute": "export FALCON_CID=${var.falcon_cid} && export FALCON_CLIENT_ID=${var.falcon_client_id} && export FALCON_CLIENT_SECRET=${var.falcon_client_secret} && export FALCON_CLOUD=${var.falcon_cloud} && /bin/bash falcon-linux-install.sh"
   }
   PROTECTED
 

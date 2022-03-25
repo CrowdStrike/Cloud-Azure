@@ -44,7 +44,7 @@ This method uses scripts to download the Falcon Sensor from CrowdStrike and inst
 
 ### Falcon Linux Sensor VM Application
 
-1. Download the CrowdStrike Falcon install script from [https://raw.githubusercontent.com/CrowdStrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh](https://raw.githubusercontent.com/CrowdStrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh)
+1. Download the CrowdStrike Falcon install script from [https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh](https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh)
 
 1. Upload the CrowdStrike Falcon install script to the storage container for access for the VM Application.
     ```azurecli
@@ -61,7 +61,7 @@ This method uses scripts to download the Falcon Sensor from CrowdStrike and inst
     ```
 3. Create a version definition of the Azure Gallery application changing any of the arguments as needed.
     ```azurecli
-    az sig gallery-application version create \                                                                                                                                                                             (add_vm_app✱)
+    az sig gallery-application version create \
       --version-name 1.1.0 \
       --application-name CrowdStrike-Falcon-Linux-Installer \
       --gallery-name myGallery \
