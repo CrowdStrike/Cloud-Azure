@@ -18,7 +18,7 @@ az group create --name myResourceGroup --location eastus
 
 ### Azure CLI
 
-Azure VM extensions can be run against an existing VMSS with the [az vmss extension set](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/quick-create-cli#deploy-sample-application) command. The following example runs the Custom Script extension against a VM named *myVM* in a resource group named *myResourceGroup*. Replace the example resource group name, VM name, and script to run (https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh) with your own information.
+Azure VM extensions can be run against an existing VMSS with the [az vmss extension set](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/quick-create-cli#deploy-sample-application) command. The following example runs the Custom Script extension against a VM named *myVM* in a resource group named *myResourceGroup*. Replace the example resource group name, VM name, and script to run (https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh) with your own information.
 
 #### VMSS Creation for Linux
 
@@ -40,7 +40,7 @@ az vmss extension set \
   --vmss-name myScaleSet \
   --name customScript \
   --publisher Microsoft.Azure.Extensions \
-  --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh"],"commandToExecute": "export FALCON_CLIENT_ID=123456789f1c4a0d9987a45123456789 && export FALCON_CLIENT_SECRET=ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789 && /bin/bash falcon-linux-deploy.sh"}'
+  --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh"],"commandToExecute": "export FALCON_CLIENT_ID=123456789f1c4a0d9987a45123456789 && export FALCON_CLIENT_SECRET=ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789 && /bin/bash falcon-linux-install.sh"}'
 ```
 
 #### VMSS Creation for Windows

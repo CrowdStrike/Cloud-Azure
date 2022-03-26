@@ -289,9 +289,9 @@
         "autoUpgradeMinorVersion": true,
         "protectedSettings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/crowdstrike/falcon-linux-install-bash/main/falcon-linux-deploy.sh"
+            "https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh"
           ],
-          "commandToExecute": "[concat('export FALCON_CID=', parameters('cid'), ' && export FALCON_CLIENT_ID=', parameters('clientId'), ' && export FALCON_CLIENT_SECRET=', parameters('clientSecret'), ' && /bin/bash falcon-linux-deploy.sh')]"
+          "commandToExecute": "[concat('export FALCON_CID=', parameters('cid'), ' && export FALCON_CLIENT_ID=', parameters('clientId'), ' && export FALCON_CLIENT_SECRET=', parameters('clientSecret'), ' && /bin/bash falcon-linux-install.sh')]"
         }
       }
     }
