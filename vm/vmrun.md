@@ -14,3 +14,12 @@ az vm run-command invoke -g myResourceGroup -n myVm \
   --command-id RunShellScript \
   --scripts 'export FALCON_CLIENT_ID=123456789f1c4a0d9987a45123456789 && export FALCON_CLIENT_SECRET=ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789 && curl -L https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh | bash'
 ```
+
+## Using Run Command on a Windows instance
+
+The following example runs the Run Command a Windows VM named *myVM* in a resource group named *myResourceGroup*. Replace the example resource group name, VM name, and script environment variables to run (https://raw.githubusercontent.com/CrowdStrike/falcon-scripts/main/powershell/install/falcon_windows_install.ps1) with your own information. For more Azure specific documentation using the Run Command, see [https://docs.microsoft.com/en-us/azure/virtual-machines/linux/run-command](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/run-command)
+
+```azurecli
+az vm run-command invoke -g myResourceGroup -n myVm \
+  --command-id RunPowerShellScript \
+  --scripts 'Invoke-WebRequest -Uri https://raw.githubusercontent.com/CrowdStrike/falcon-scripts/main/powershell/install/falcon_windows_install.ps1 -Outfile falcon_windows_install.ps1; .\falcon_windows_install.ps1 -FalconClientId 123456789f1c4a0d9987a45123456789 -FalconClientSecret ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789'

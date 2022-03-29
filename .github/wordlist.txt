@@ -666,3 +666,13 @@ VMSS
 vmss
 Virtual
 Command
+ABCDEFGHtwfk
+EsnjXxS
+FalconClientSecret
+Outfile
+RunPowerShellScript
+Uri
+WebRequest
+azurecli
+mH
+myVm
