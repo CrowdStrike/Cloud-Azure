@@ -7,11 +7,11 @@ It effectively replaces the third-party vendor provided VM Extensions. VM Applic
 - VM Application
 - VM Application version
 
-Azure VM Applications can be created with the Azure CLI, PowerShell, REST API, and the Azure portal. It is really important to know that VM Applications are currently in public review. To learn more about VM Applications, see [the VM Application documentation](https://docs.microsoft.com/en-us/azure/virtual-machines/vm-applications)
+Azure VM Applications can be created with the Azure CLI, PowerShell, REST API, and the Azure portal. It is really important to know that VM Applications are currently in public preview. To learn more about VM Applications, see [the VM Application documentation](https://docs.microsoft.com/en-us/azure/virtual-machines/vm-applications)
 
 ## Prerequisites
 
-An Azure Compute Gallery and Azure Storage Account must exist and be accessible to the region(s) that you will be utilizing the Azure VM Application.
+To begin with Azure VM Applications, an Azure Compute Gallery and Azure Storage Account must exist and be accessible to the region(s) that you will be utilizing the Azure VM Application.
 
 1. If a gallery does not exist already, create an Azure Compute Gallery.
     ```azurecli
@@ -41,6 +41,7 @@ An Azure Compute Gallery and Azure Storage Account must exist and be accessible 
 ## Falcon Sensor Installer Deployment using VM Applications (Preferred Method)
 
 This method uses scripts to download the Falcon Sensor from CrowdStrike and install the Falcon Sensor to virtual machines as a VM Application.
+It will use a smaller amount of hard drive space due to the small size of the scripts.
 
 ### Falcon Linux Sensor VM Application
 
@@ -48,7 +49,7 @@ This method uses scripts to download the Falcon Sensor from CrowdStrike and inst
 
 1. Upload the CrowdStrike Falcon install script to the storage container for access for the VM Application.
     ```azurecli
-    az storage blob upload --file /path/to/falcon-linux-deploy.sh --container-name myContainer --account-name myStorageAccount
+    az storage blob upload --file /path/to/falcon-linux-install.sh --container-name myContainer --account-name myStorageAccount
     ```
 2. Create an Azure Gallery application for a Linux Operating System.
     ```azurecli
@@ -62,20 +63,52 @@ This method uses scripts to download the Falcon Sensor from CrowdStrike and inst
 3. Create a version definition of the Azure Gallery application changing any of the arguments as needed.
     ```azurecli
     az sig gallery-application version create \
-      --version-name 1.1.0 \
+      --version-name 1.0.0 \
       --application-name CrowdStrike-Falcon-Linux-Installer \
       --gallery-name myGallery \
       --location "East US" \
       --resource-group myGalleryRG \
-      --package-file-link "https://gallary.blob.core.windows.net/apps/falcon-linux-deploy.sh" \
-      --install-command "mv CrowdStrike-Falcon-Linux-Installer falcon-linux-deploy.sh && export FALCON_CLIENT_ID=123456789f1c4a0d9987a45123456789 && export FALCON_CLIENT_SECRET=ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789 && bash falcon-linux-deploy.sh" \
-      --remove-command "yum -y remove falcon-sensor"
+      --package-file-link "https://myStorageAccount.blob.core.windows.net/myContainer/falcon-linux-install.sh" \
+      --install-command "mv CrowdStrike-Falcon-Linux-Installer falcon-linux-install.sh && export FALCON_CLIENT_ID=123456789f1c4a0d9987a45123456789 && export FALCON_CLIENT_SECRET=ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789 && bash falcon-linux-install.sh" \
+      --remove-command "export FALCON_UNINSTALL=true && bash falcon-linux-install.sh"
     ```
-    Make sure to keep some iteration of `mv CrowdStrike-Falcon-Linux-Installer falcon-linux-deploy.sh` in `--install-command`. Otherwise, the application will fail to install.
+    Make sure to keep some iteration of `mv CrowdStrike-Falcon-Linux-Installer falcon-linux-install.sh` in `--install-command`. Otherwise, the application will fail to install.
+
+### Falcon Windows Sensor VM Application
+
+1. Download the CrowdStrike Falcon install script from [https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/powershell/install/falcon_windows_install.ps1](https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/powershell/install/falcon_windows_install.ps1)
+
+1. Upload the CrowdStrike Falcon install script to the storage container for access for the VM Application.
+    ```azurecli
+    az storage blob upload --file /path/to/falcon_windows_install.ps1 --container-name myContainer --account-name myStorageAccount
+    ```
+2. Create an Azure Gallery application for the Microsoft Windows Operating System.
+    ```azurecli
+    az sig gallery-application create \
+      --resource-group myGalleryRG \
+      --gallery-name myGallery \
+      --name CrowdStrike-Falcon-Windows-Installer \
+      --description "CrowdStrike Falcon Windows Sensor" \
+      --os-type Windows
+    ```
+3. Create a version definition of the Azure Gallery application changing any of the arguments as needed.
+    ```azurecli
+    az sig gallery-application version create \
+      --version-name 1.0.0 \
+      --application-name CrowdStrike-Falcon-Windows-Installer \
+      --gallery-name myGallery \
+      --location "East US" \
+      --resource-group myGalleryRG \
+      --package-file-link "https://myStorageAccount.blob.core.windows.net/myContainer/falcon_windows_install.ps1" \
+      --install-command "move .\\CrowdStrike-Falcon-Windows-Installer .\\falcon_windows_install.ps1 & powershell.exe -Command .\falcon_windows_install.ps1 -FalconClientId 123456789f1c4a0d9987a45123456789 -FalconClientSecret ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789" \
+      --remove-command 'powershell.exe -Command .\\falcon_windows_install.ps1 -Uninstall $true'
+    ```
+    Make sure to keep some iteration of `move .\\CrowdStrike-Falcon-Windows-Installer .\\falcon_windows_install.ps1` in `--install-command`. Otherwise, the application will fail to install.
 
 ## Falcon Sensor Package Deployment using VM Applications (Alternate Method)
 
 This method uses the CrowdStrike Falcon installation packages to install the Falcon Sensor to virtual machines as a VM Application.
+It will use a larger amount of hard drive space based on the sensor install packages and any dependencies that may need to be bundled with the install.
 
 ### Falcon Windows Sensor VM Application
 
