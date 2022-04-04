@@ -2,6 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "azureSubscriptionId": {
+            "value": "12345678-abcd-abcd-abcd-abcdefg12345"
+        },
         "clientId": {
             "value": "123456789f1c4a0d9987a45123456789"
         },
@@ -30,7 +33,7 @@
             ]
         },
         "virtualNetworkId": {
-            "value": "/subscriptions/5a84cb53-b383-44db-bd58-c65ca3dfcb8c/resourceGroups/myResourceGroup/providers/Microsoft.Network/virtualNetworks/myResourceGroup-vnet"
+            "value": "[concat('/subscriptions/', parameters('azureSubscriptionId'), '/resourceGroups/myResourceGroup/providers/Microsoft.Network/virtualNetworks/myResourceGroup-vnet')]"
         },
         "virtualNetworkName": {
             "value": "myResourceGroup-vnet"
@@ -39,7 +42,7 @@
             "value": [
                 {
                     "name": "basicNsgmyResourceGroup-vnet-nic01",
-                    "id": "/subscriptions/5a84cb53-b383-44db-bd58-c65ca3dfcb8c/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/basicNsgmyResourceGroup-vnet-nic01",
+                    "id": "[concat('/subscriptions/', parameters('azureSubscriptionId'), '/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/basicNsgmyResourceGroup-vnet-nic01')]",
                     "rules": []
                 }
             ]
@@ -49,14 +52,14 @@
                 {
                     "name": "myResourceGroup-vnet-nic01",
                     "primary": true,
-                    "subnetId": "/subscriptions/5a84cb53-b383-44db-bd58-c65ca3dfcb8c/resourceGroups/myResourceGroup/providers/Microsoft.Network/virtualNetworks/myResourceGroup-vnet/subnets/default",
+                    "subnetId": "[concat('/subscriptions/', parameters('azureSubscriptionId'), '/resourceGroups/myResourceGroup/providers/Microsoft.Network/virtualNetworks/myResourceGroup-vnet/subnets/default')]",
                     "applicationGatewayBackendAddressPools": [],
                     "loadBalancerBackendAddressPools": [],
                     "applicationSecurityGroups": [],
                     "loadBalancerInboundNatPools": [],
                     "enableAcceleratedNetworking": true,
                     "nsgName": "basicNsgmyResourceGroup-vnet-nic01",
-                    "nsgId": "/subscriptions/5a84cb53-b383-44db-bd58-c65ca3dfcb8c/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/basicNsgmyResourceGroup-vnet-nic01",
+                    "nsgId": "[concat('/subscriptions/', parameters('azureSubscriptionId'), '/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkSecurityGroups/basicNsgmyResourceGroup-vnet-nic01')]",
                     "pipName": ""
                 }
             ]
