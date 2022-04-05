@@ -63,7 +63,7 @@ az vmss extension set \
   --vmss-name myScaleSet \
   --name customScriptExtension \
   --publisher Microsoft.Compute \
-  --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/CrowdStrike/Cloud-AWS/main/Agent-Install-Examples/powershell/sensor_install.ps1"],"commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File sensor_install.ps1 https://api.crowdstrike.com 123456789f1c4a0d9987a45123456789 ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789"}'
+  --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/CrowdStrike/falcon-scripts/main/powershell/install/falcon_windows_install.ps1"],"commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File falcon_windows_install.ps1 -FalconClientId 123456789f1c4a0d9987a45123456789 -FalconClientSecret ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789"}'
 ```
 
 ### Azure Resource Manager templates

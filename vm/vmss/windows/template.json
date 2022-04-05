@@ -2,6 +2,9 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "azureSubscriptionId": {
+            "type": "string"
+        },
         "clientId": {
             "type": "securestring",
             "metadata": {
@@ -283,9 +286,9 @@
                                     "autoUpgradeMinorVersion": true,
                                     "protectedSettings": {
                                         "fileUris": [
-                                            "https://raw.githubusercontent.com/CrowdStrike/Cloud-AWS/main/Agent-Install-Examples/powershell/sensor_install.ps1"
+                                            "https://raw.githubusercontent.com/CrowdStrike/falcon-scripts/main/powershell/install/falcon_windows_install.ps1"
                                         ],
-                                        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File sensor_install.ps1 ', parameters('falconCloud'), ' ', parameters('clientId'), ' ', parameters('clientSecret'))]"
+                                        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File falcon_windows_install.ps1 -FalconClientId ', parameters('clientId'), ' -FalconClientSecret ', parameters('clientSecret'))]"
                                     }
                                 }
                             }
