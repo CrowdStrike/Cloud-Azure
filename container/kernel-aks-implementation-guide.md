@@ -1,6 +1,6 @@
 # Implementation Guide for CrowdStrike Falcon Sensor for Linux on Azure AKS Kubernetes cluster using Helm Chart
 
-This guide works through creation of a new Kubernetes cluster, deployment of the Falcon Sensor for Linux using Helm Chart, and demonstration of detection capabilities of Falcon Container Workload Protection.
+This guide works through creation of a new Kubernetes cluster, deployment of the Falcon Sensor for Linux DaemonSet using Helm Chart, and demonstration of detection capabilities of Falcon Container Workload Protection.
 
 No prior Kubernetes or Falcon knowledge is needed to follow this guide. First sections of this guide focus on creation of ACR Container registry and an AKS cluster, however, these sections may be skipped if you have access to an existing cluster.
 
@@ -39,9 +39,9 @@ Time needed to follow this guide: 45 minutes.
 - Set your ACR registry name and resource group name into variables
 - Note: The ACR_NAME must be a unique name globally as a DNS record is created to reference the image registry
 ```
-    CLOUD_REGION=westus
+    CLOUD_REGION=<region>
     ACR_NAME=<arc_unique_name>
-    RG_NAME=rg_cswest
+    RG_NAME=<resource_group_name>
 ```
 - Create the resource group for the ACR and Cluster
 ```
@@ -80,50 +80,7 @@ Time needed to follow this guide: 45 minutes.
 ```
 
 
-### Step 2: Create and upload containerized falcon-sensor
-
-- Set the required variables for falcon-sensor download
-```
-    FALCON_CLIENT_ID=1234567890ABCDEFG1234567890ABCDEF
-    FALCON_CLIENT_SECRET=1234567890ABCDEFG1234567890ABCDEF
-    CID=1234567890ABCDEFG1234567890ABCDEF-12
-```
-- Use the container-image-tools to build a containerized falcon-sensor
-- Note: This demo uses the ubuntu18 image which was supported as of this writing
-```
-    docker run --privileged=true \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v ~/.azure:/root/.azure \
-        -e FALCON_CLIENT_ID="$FALCON_CLIENT_ID" \
-        -e FALCON_CLIENT_SECRET="$FALCON_CLIENT_SECRET" \
-        -e CID="$CID" \
-        quay.io/crowdstrike/cloud-tools-image falcon-node-sensor-build ubuntu18
-```
-Example output:
-```
-    #8 [4/5] COPY entrypoint.sh /
-    #8 sha256:d0ef4c755fb66783bcdb499d654eed759c9c7c502bb59b4fbd99f0260d8cb087
-    #8 DONE 0.0s
-
-    #9 [5/5] WORKDIR /opt/CrowdStrike
-    #9 sha256:2e014e9081abac8653e3815083483b61e27e2cd1c9840d90588b9a92bf53c9e8
-    #9 DONE 0.0s
-
-    #10 exporting to image
-    #10 sha256:e8c613e07b0b7ff33893b694f7759a10d42e180f2b4dc349fb57dc6b71dcab00
-    #10 exporting layers
-    #10 exporting layers 0.1s done
-    #10 writing image sha256:594d7510f2768cd43fc44dbb1342a9e73be76b9123217fb22a8ab40b4937db0e done
-    #10 naming to docker.io/library/falcon-node-sensor:latest done
-    #10 DONE 0.1s
-    REPOSITORY           TAG       IMAGE ID       CREATED                  SIZE
-    falcon-node-sensor   latest    594d7510f276   Less than a second ago   83.7MB
-    Contaner falcon-node-sensor:latest has been built successfully
-```
-- Tag the image created for your ACR
-```
-    docker tag falcon-node-sensor:latest $ACR_LOGINSERVER/falcon-node-sensor:latest
-```
+### Step 2: Clone the falcon sensor for linux daemonset image
 - Authenticate to the ACR
 ```
     az acr login -n $ACR_NAME
@@ -133,14 +90,24 @@ Example output:
     Uppercase characters are detected in the registry name. When using its server url in docker commands, to avoid authentication errors, use all lowercase.
     Login Succeeded
 ```
-- Upload the falcon-container-sensor to the ACR you created previously
+- Set the required variables for falcon-sensor download
 ```
-    docker push $ACR_LOGINSERVER/falcon-node-sensor:latest
+    FALCON_CLIENT_ID=1234567890ABCDEFG1234567890ABCDEF
+    FALCON_CLIENT_SECRET=1234567890ABCDEFG1234567890ABCDEF
+    CID=1234567890ABCDEFG1234567890ABCDEF-12
 ```
-
+- Use the container-image-tools to clone the falcon sensor for linux daemonset image to ACR.
+```
+    docker run --privileged=true \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v ~/.azure:/root/.azure \
+        -e FALCON_CLIENT_ID="$FALCON_CLIENT_ID" \
+        -e FALCON_CLIENT_SECRET="$FALCON_CLIENT_SECRET" \
+        -e CID="$CID" \
+        quay.io/crowdstrike/cloud-tools-image falcon-node-sensor-push $ACR_LOGINSERVER/falcon-node-sensor
 
 ### Step 3: Create the AKS cluster and deploy the falcon-helm chart
-
+```
 - Set the name of the AKS Cluster into a variable
 ```
     AKS_CLUSTER=csAksCluster01
@@ -235,36 +202,21 @@ Example output:
 Example output:
 ```
     NAME                              READY   STATUS    RESTARTS   AGE
-    falcon-helm-falcon-sensor-4ffwz   2/2     Running   0          38s
-    falcon-helm-falcon-sensor-l2c5w   2/2     Running   0          45s
-    falcon-helm-falcon-sensor-t7rxz   2/2     Running   0          38s
+    falcon-helm-falcon-sensor-4ffwz   1/1     Running   0          38s
+    falcon-helm-falcon-sensor-l2c5w   1/1     Running   0          45s
+    falcon-helm-falcon-sensor-t7rxz   1/1     Running   0          38s
 ```
-- (optional) Verify that given pod has registered with CrowdStrike Falcon and received unique identifier.
-```
-     for i in $(kubectl get pods -n falcon-system | awk 'FNR > 1' | awk '{print $1}')
-     do
-              echo "$i - $(kubectl exec $i -n falcon-system -c falcon-node-sensor -- falconctl -g --aid)"
-     done
-```
-Example output:
-```
-     falcon-helm-falcon-sensor-XXXX - aid="a582XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-```
-- (optional) Check the Reduced Functionality Mode state of the Falcon Sensor.
-- Note that the value returned should be false if running on supported kernel and platform versions.
-```
-     for i in $(kubectl get pods -n falcon-system | awk 'FNR > 1' | awk '{print $1}')
-     do
-           echo "$i - $(kubectl exec $i -n falcon-system -c falcon-node-sensor -- falconctl -g --rfm-state)"
-     done
-```
-Example output:
-```
-    falcon-helm-falcon-sensor-4ffwz - rfm-state=false.
-    falcon-helm-falcon-sensor-l2c5w - rfm-state=false.
-    falcon-helm-falcon-sensor-t7rxz - rfm-state=false.
-```
-
+- (optional) Verify that Falcon Sensor for Linux has insert itself to the kernel
+ - Note that this must be done on Kubernetes worker nodes so access to these nodes is required for this step. You can access worker nodes through the daemonset pods.
+    ```
+    $ kubectl exec <podname> -n falcon-system --stdin --tty -- /bin/sh
+    $ lsmod | grep falcon
+    falcon_lsm_serviceable     724992  1
+    falcon_nf_netcontain        20480  1
+    falcon_kal                  45056  1 falcon_lsm_serviceable
+    falcon_lsm_pinned_11110     45056  1
+    falcon_lsm_pinned_11308     45056  1
+    ```
 
 ### Step 4: (Optional) Deploy the vulnapp project to the cluster and test detections
 
