@@ -29,7 +29,7 @@ install_deps(){
     sudo az aks install-cli
     install_gofalcon
     sudo mkdir -p /yaml
-    wget -q -O /yaml/vulnerable.example.yaml https://raw.githubusercontent.com/isimluk/vulnapp/master/vulnerable.example.yaml
+    wget -q -O /yaml/vulnerable.example.yaml https://raw.githubusercontent.com/crowdstrike/vulnapp/main/vulnerable.example.yaml
 }
 
 download_build_falcon_sensor(){

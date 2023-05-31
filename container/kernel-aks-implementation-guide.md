@@ -222,7 +222,7 @@ Example output:
 
 - Deploy the vulnapp manifest to cluster
 ```
-    kubectl apply -f  https://raw.githubusercontent.com/isimluk/vulnapp/master/vulnerable.example.yaml
+    kubectl apply -f  https://raw.githubusercontent.com/crowdstrike/vulnapp/main/vulnerable.example.yaml
 ```
 Example output:
 ```
@@ -241,7 +241,7 @@ http://111.11.111.111/
 - Visit this web address and use the links to test detections
 - Tear down the vulnapp deployment
 ```
-    kubectl delete -f  https://raw.githubusercontent.com/isimluk/vulnapp/master/vulnerable.example.yaml
+    kubectl delete -f  https://raw.githubusercontent.com/crowdstrike/vulnapp/main/vulnerable.example.yaml
 ```
 
 ### Step 3: Tear down the demo
