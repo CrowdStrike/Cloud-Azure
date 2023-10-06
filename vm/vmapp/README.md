@@ -76,13 +76,22 @@ It will use a smaller amount of hard drive space due to the small size of the sc
 
 ### Falcon Windows Sensor VM Application
 
-1. Download the CrowdStrike Falcon install script from [https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/powershell/install/falcon_windows_install.ps1](https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/powershell/install/falcon_windows_install.ps1)
+1. In the CrowdStrike console, ensure the following API scopes are enabled for your OAuth client ID and secret:
 
-1. Upload the CrowdStrike Falcon install script to the storage container for access for the VM Application.
+  - Install:
+    - **Sensor Download** [read]
+    - **Sensor update policies** [read]
+  - Uninstall:
+    - **Host** [write]
+    - **Sensor update policies** [write]
+
+2. Download the CrowdStrike Falcon install scripts zip file from [https://github.com/crowdstrike/falcon-scripts/releases/latest/download/falcon_windows_install_scripts.zip](https://github.com/crowdstrike/falcon-scripts/releases/latest/download/falcon_windows_install_scripts.zip)
+
+3. Upload the CrowdStrike Falcon install scripts zip file to the storage container for access for the VM Application.
     ```azurecli
-    az storage blob upload --file /path/to/falcon_windows_install.ps1 --container-name myContainer --account-name myStorageAccount
+    az storage blob upload --file /path/to/falcon_windows_install_scripts.zip --container-name myContainer --account-name myStorageAccount
     ```
-2. Create an Azure Gallery application for the Microsoft Windows Operating System.
+4. Create an Azure Gallery application for the Microsoft Windows Operating System.
     ```azurecli
     az sig gallery-application create \
       --resource-group myGalleryRG \
@@ -91,7 +100,7 @@ It will use a smaller amount of hard drive space due to the small size of the sc
       --description "CrowdStrike Falcon Windows Sensor" \
       --os-type Windows
     ```
-3. Create a version definition of the Azure Gallery application changing any of the arguments as needed.
+5. Create a version definition of the Azure Gallery application changing any of the arguments as needed.
     ```azurecli
     az sig gallery-application version create \
       --version-name 1.0.0 \
@@ -99,11 +108,16 @@ It will use a smaller amount of hard drive space due to the small size of the sc
       --gallery-name myGallery \
       --location "East US" \
       --resource-group myGalleryRG \
-      --package-file-link "https://myStorageAccount.blob.core.windows.net/myContainer/falcon_windows_install.ps1" \
-      --install-command "move .\\CrowdStrike-Falcon-Windows-Installer .\\falcon_windows_install.ps1 & powershell.exe -Command .\falcon_windows_install.ps1 -FalconClientId 123456789f1c4a0d9987a45123456789 -FalconClientSecret ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789" \
-      --remove-command 'powershell.exe -Command .\\falcon_windows_install.ps1 -Uninstall $true'
+      --package-file-name falcon.zip \
+      --package-file-link "https://myStorageAccount.blob.core.windows.net/myContainer/falcon_windows_install_scripts.zip" \
+      --install-command 'powershell.exe -Command "Expand-Archive falcon.zip -DestinationPath C:\ProgramData\CrowdStrike; C:\ProgramData\CrowdStrike\falcon_windows_install.ps1 -FalconClientId 123456789f1c4a0d9987a45123456789 -FalconClientSecret ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789' \
+      --remove-command 'powershell.exe -Command "C:\ProgramData\CrowdStrike\falcon_windows_uninstall.ps1"'
     ```
-    Make sure to keep some iteration of `move .\\CrowdStrike-Falcon-Windows-Installer .\\falcon_windows_install.ps1` in `--install-command`. Otherwise, the application will fail to install.
+    You can alternatively configure the uninstall command to retrieve the maintenance token as well as remove the host from the CrowdStrike Falcon console. For example:
+    ```
+    powershell.exe -Command "C:\ProgramData\CrowdStrike\falcon_windows_uninstall.ps1 -FalconClientId 123456789f1c4a0d9987a45123456789 -FalconClientSecret ABCDEFGHtwfk6c0U4l72EsnjXxS1mH9123456789 -RemoveHost"
+    ```
+    For a complete list of install/uninstall script CLI flags that can be used as well as more information on the scripts themselves, see [https://github.com/CrowdStrike/falcon-scripts/tree/main/powershell/install](https://github.com/CrowdStrike/falcon-scripts/tree/main/powershell/install).
 
 ## Falcon Sensor Package Deployment using VM Applications (Alternate Method)
 
