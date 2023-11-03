@@ -10,7 +10,11 @@ This article provides an overview of using a Run command that will install the C
 
 ## Using Run Command on Linux
 
-The following example runs the Run Command a Linux VM named *myVM* in a resource group named *myResourceGroup*. Replace the example resource group name, VM name, and script environment variables to run (https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh) with your own information. For more Azure specific documentation using the Run Command, see [https://docs.microsoft.com/en-us/azure/virtual-machines/linux/run-command](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/run-command)
+The following example runs the Run Command on a Linux VM named *myVM* in a resource group named *myResourceGroup*.
+
+Replace the example resource group name, VM name, and script environment variables to run (https://raw.githubusercontent.com/crowdstrike/falcon-scripts/main/bash/install/falcon-linux-install.sh) with your own information.
+
+For more Azure specific documentation using the Run Command on Linux, see the [Azure docs](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/run-command).
 
 ```azurecli
 az vm run-command invoke -g myResourceGroup -n myVm \
@@ -28,7 +32,11 @@ az vm run-command invoke --ids $(az vm list -g myResourceGroup --query "[].id" -
 
 ## Using Run Command on Windows
 
-The following example runs the Run Command a Windows VM named *myVM* in a resource group named *myResourceGroup*. Replace the example resource group name, VM name, and script environment variables to run (https://raw.githubusercontent.com/CrowdStrike/falcon-scripts/main/powershell/install/falcon_windows_install.ps1) with your own information. For more Azure specific documentation using the Run Command, see [https://docs.microsoft.com/en-us/azure/virtual-machines/linux/run-command](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/run-command)
+The following example runs the Run Command on a Windows VM named *myVM* in a resource group named *myResourceGroup*.
+
+Replace the example resource group name, VM name, and script environment variables to run (https://raw.githubusercontent.com/CrowdStrike/falcon-scripts/main/powershell/install/falcon_windows_install.ps1) with your own information.
+
+For more Azure specific documentation using the Run Command on Windows, see the [Azure docs](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/run-command).
 
 > [!IMPORTANT]
 > Ensure the target VM's support TLS 1.2 or later. If you see errors related to TLS, try prepending `--scripts` with the following: `[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;`.
