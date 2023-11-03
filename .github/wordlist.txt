@@ -34,8 +34,8 @@ Prerequisites
 CWP
 LUMOS
 MOTD
-kubernetes 
-Adminstrator 
+kubernetes
+Adminstrator
 loginServer
 UI
 onwards
@@ -677,3 +677,6 @@ WebRequest
 azurecli
 mH
 myVm
+TLS
+VM's
+prepending
