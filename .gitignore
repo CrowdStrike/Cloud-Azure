@@ -6,6 +6,7 @@
 *.dylib
 *.DS_Store
 bin
+!storage-account-container-protection/bin
 
 # editor and IDE paraphernalia
 .idea
@@ -42,3 +43,12 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 example: *tfplan*
+
+# Exlude function_app.zip
+function_app.zip
+
+# exclude venv
+.venv
+
+#exclude azure local settings
+local.settings.json
