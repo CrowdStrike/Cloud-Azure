@@ -27,14 +27,14 @@ This data connector imports Falcon IOCs into the Threat Intelligence upload indi
 |                       | spec_version   | "2.1"                                                                             |
 |                       | type           | "indicator"                                                                       |
 | published_date        | valid_from     |                                                                                   |
-|                       | confidence     | malicious_cofidence: "high" = 80, "medium" = 60, "low" = 30, "other" = 10         |
+|                       | confidence     | malicious_confidence: "high" = 80, "medium" = 60, "low" = 30, "other" = 10        |
 | kill_chain_phases     | killchain      |                                                                                   |
 | indicator_types       | threat_types   |                                                                                   |
 | label\.name           | labels         |                                                                                   |
 
 #### CrowdStrike Indicator types to STIX pattern
 
-| CrowdStrike Indicator Tpe | STIX Pattern               |
+| CrowdStrike Indicator Type | STIX Pattern              |
 |---------------------------|----------------------------|
 | hash_md5                  | file:hashes.MD5            |
 | hash_sha256               | file:hashes.'SHA-256'      |
@@ -93,7 +93,7 @@ Provide the Entra App principal with 'Microsoft Sentinel Contributor' role assig
 
 Option 1 - Azure Resource Manager (ARM) Template
 
-Use this method for automated deployment of the CrowdStrike Falcon Adversary Intelligence connector connector using an ARM Tempate.
+Use this method for automated deployment of the CrowdStrike Falcon Adversary Intelligence connector connector using an ARM Template.
 
 1. Click the Deploy to Azure button.
 
