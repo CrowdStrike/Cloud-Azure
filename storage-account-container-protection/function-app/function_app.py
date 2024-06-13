@@ -8,10 +8,9 @@ Creation date: 05.27.24 - gax.theodorio@CrowdStrike
 import io
 import os
 import time
-import urllib.parse
 import json
-import azure.functions as func
 import logging
+import azure.functions as func
 import azurefunctions.extensions.bindings.blob as blob
 from falconpy import OAuth2, SampleUploads, QuickScan
 
