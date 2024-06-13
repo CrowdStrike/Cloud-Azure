@@ -8,7 +8,7 @@ This data connector imports Falcon IOCs into the Threat Intelligence upload indi
 
 ![image](./media/dataconnector_diagram.png)
 
-- The function checks if there is an existing "_marker" in the file share. Using the marker, it queries the CrowdStrike Intel endpoint `/intel/combined/indicators/v1` for indicators based on the indicators type provided in the configuration. If there is no marker present, this means that it's the first execution, at which point an date will be used to retrieve the indicators based on the update date. This date is derived by the look back days value provided in the configuration.
+- The function checks if there is an existing "_marker" in the file share. Using the marker, it queries the CrowdStrike Intel endpoint `/intel/combined/indicators/v1` for indicators based on the indicators type provided in the configuration. If there is no marker present, this means that it's the first execution, at which point a date will be used to retrieve the indicators based on the updated date. This date is derived by the `LookBackDays` value provided in the configuration.
 - Once a batch of 100 indicators has been retrieved from the api, the function converts the indicators to STIX 2.1 format using the mapping below
 
 #### Crowdstrike IOC to STIX Mapping
