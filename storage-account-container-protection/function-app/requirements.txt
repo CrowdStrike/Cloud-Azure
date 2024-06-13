@@ -1,0 +1,3 @@
+azure-functions
+crowdstrike-falconpy
+azurefunctions.extensions.bindings.blob
