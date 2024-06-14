@@ -48,8 +48,9 @@ from logging.handlers import RotatingFileHandler
 # Authorization, Sample Uploads and QuickScan Service Classes
 from falconpy import OAuth2, SampleUploads, QuickScan
 
+# import azure libraries
 from azure.identity import DefaultAzureCredential
-from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+from azure.storage.blob import BlobServiceClient
 
 logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(
     logging.WARNING
@@ -283,7 +284,11 @@ def parse_command_line():
         required=True,
     )
     parser.add_argument(
-        "-k", "--key", dest="key", help="CrowdStrike Falcon API KEY", required=True
+        "-k",
+        "--key",
+        dest="key",
+        help="CrowdStrike Falcon API KEY",
+        required=True,
     )
     parser.add_argument(
         "-s",

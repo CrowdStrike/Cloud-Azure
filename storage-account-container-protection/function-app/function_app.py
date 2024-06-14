@@ -54,7 +54,7 @@ Scanner = QuickScan(auth_object=auth)
 )
 def container_protection(client: blob.BlobClient):
 
-    logging.info(f"ClientID: {client_id}... ClientSecret: {client_secret}")
+    logging.info("ClientID: %s... ClientSecret: %s", client_id, client_secret)
 
     blob_properties = client.get_blob_properties()
     file_size = blob_properties["size"]
@@ -71,7 +71,7 @@ def container_protection(client: blob.BlobClient):
         )
         if response["status_code"] > 201:
             raise SystemExit(
-                f"Error uploading object {file_name} from container {container} to Falcon Intelligence Sandbox. "
+                f"Error uploading object {file_name} from container {container} to Falcon Intelligence Sandbox."
                 "Make sure your API key has the Sample Uploads permission."
             )
         else:
@@ -82,9 +82,7 @@ def container_protection(client: blob.BlobClient):
             # Uploaded file unique identifier
             upload_sha = response["body"]["resources"][0]["sha256"]
             # Scan request ID, generated when the request for the scan is made
-            scan_id = Scanner.scan_samples(body={"samples": [upload_sha]})["body"][
-                "resources"
-            ][0]
+            scan_id = Scanner.scan_samples(body={"samples": [upload_sha]})["body"]["resources"][0]
             scanning = True
             # Loop until we get a result or the function times out
             while scanning:
@@ -154,10 +152,9 @@ def container_protection(client: blob.BlobClient):
             response = Samples.delete_sample(ids=upload_sha)
             if response["status_code"] > 201:
                 logging.warning(
-                    f"Could not remove sample {file_name} from sandbox.",
-                )
+                    "Could not remove sample %s from sandbox.", file_name)
             else:
-                logging.info(f"Sample {file_name} removed from sandbox.")
+                logging.info("Sample %s removed from sandbox.", file_name)
 
         except Exception as err:
             logging.error(err)
