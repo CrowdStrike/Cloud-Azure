@@ -3,6 +3,8 @@ export TESTS="${HOME}/testfiles"
 RD="\033[1;31m"
 GRN="\033[1;33m"
 NC="\033[0;0m"
+# shellcheck disable=SC2034
+LB="\033[1;34m"
 
 # Source the common functions
 # shellcheck disable=SC1091

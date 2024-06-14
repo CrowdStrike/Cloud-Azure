@@ -51,6 +51,7 @@ die() {
 # Azure get Subscription ID
 azure_get_subscription_id() {
     # Get the Azure subscription ID
+    # shellcheck disable=SC2005
     echo "$(az account show | json_value "id" 2>/dev/null)"
 }
 
@@ -58,6 +59,7 @@ cs_verify_auth() {
     if ! command -v curl >/dev/null 2>&1; then
         die "The 'curl' command is missing. Please install it before continuing. Aborting..."
     fi
+    # shellcheck disable=SC2154
     token_result=$(echo "client_id=$FID&client_secret=$FSECRET" |
         curl -X POST -s -L "https://$(cs_cloud)/oauth2/token" \
             -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \
@@ -79,29 +81,30 @@ cs_set_base_url() {
 
 configure_environment() {
     CHDIR="$1"
-    STORAGE_ACCOUNT=$(terraform -chdir=${CHDIR} output -raw demo_storage_account_name)
-    STORAGE_CONTAINER=$(terraform -chdir=${CHDIR} output -raw demo_storage_container_name)
-    STORAGE_ACCOUNT_KEY=$(terraform -chdir=${CHDIR} output -raw storage_account_key)
-    APP_INSIGHTS_APP_ID=$(terraform -chdir=${CHDIR} output -raw app_insights_app_id)
+    STORAGE_ACCOUNT=$(terraform -chdir="${CHDIR}" output -raw demo_storage_account_name)
+    STORAGE_CONTAINER=$(terraform -chdir="${CHDIR}" output -raw demo_storage_container_name)
+    STORAGE_ACCOUNT_KEY=$(terraform -chdir="${CHDIR}" output -raw storage_account_key)
+    APP_INSIGHTS_APP_ID=$(terraform -chdir="${CHDIR}" output -raw app_insights_app_id)
 
     echo -e "\nConfiguring environment for demo...\n"
-    [[ -d $TESTS ]] || mkdir $TESTS
+    [[ -d $TESTS ]] || mkdir "$TESTS"
     # SAFE EXAMPLES
     echo -e "Downloading safe sample files...\n"
-    wget -q -O $TESTS/unscannable1.png https://adversary.crowdstrike.com/assets/images/Adversaries_Ocean_Buffalo.png
-    wget -q -O $TESTS/unscannable2.jpg https://www.crowdstrike.com/blog/wp-content/uploads/2018/04/April-Adversary-Stardust.jpg
-    cp /usr/bin/whoami $TESTS/safe1.bin
-    cp /usr/sbin/fdisk $TESTS/safe2.bin
+    wget -q -O "$TESTS"/unscannable1.png https://adversary.crowdstrike.com/assets/images/Adversaries_Ocean_Buffalo.png
+    wget -q -O "$TESTS"/unscannable2.jpg https://www.crowdstrike.com/blog/wp-content/uploads/2018/04/April-Adversary-Stardust.jpg
+    cp /usr/bin/whoami "$TESTS"/safe1.bin
+    cp /usr/sbin/fdisk "$TESTS"/safe2.bin
     # # MALICIOUS EXAMPLES
     # echo -e "Malicious file prep...\n"
     wget -O malqueryinator.py https://raw.githubusercontent.com/CrowdStrike/falconpy/main/samples/malquery/malqueryinator.py
     python3 -m pip install urllib3==1.26.15 crowdstrike-falconpy
-    python3 malqueryinator.py -v ryuk -t wide -f malicious.zip -e 3 -k $FID -s $FSECRET
-    unzip -d $TESTS -P infected malicious.zip
+    python3 malqueryinator.py -v ryuk -t wide -f malicious.zip -e 3 -k "$FID" -s "$FSECRET"
+    unzip -d "$TESTS" -P infected malicious.zip
     C=0
-    for f in $(ls $TESTS --hide=**.*); do
+    # shellcheck disable=SC2045
+    for f in $(ls "$TESTS" --hide=**.*); do
         ((C = C + 1))
-        mv $TESTS/$f $TESTS/malicious$C.bin
+        mv "$TESTS"/"$f" "$TESTS"/malicious$C.bin
     done
     #chown -R ec2-user:ec2-user $TESTS
     rm malicious.zip
