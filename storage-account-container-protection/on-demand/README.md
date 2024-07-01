@@ -10,7 +10,7 @@ While similar to the serverless function, this solution will only scan the bucke
 
 ## Running the program
 
-[![Launch Cloud Shell](https://shell.azure.com/images/launchcloudshell.png "Launch Cloud Shell")](https://shell.azure.com)
+[Launch Cloud Shell](https://shell.azure.com)
 
 Clone this repository by running the following commands
 

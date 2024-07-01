@@ -40,7 +40,7 @@ Next, you will be standing up an environment for this demonstration
 
 Login to your Azure subscription
 
-Open up an instance of Cloud Shell.
+[Launch Cloud Shell](https://shell.azure.com)
 
 Clone this repository by running the following commands
 
