@@ -18,6 +18,7 @@ Clone this repository by running the following commands
 git clone https://github.com/CrowdStrike/Cloud-Azure.git
 ```
 
+
 In order to run this solution, you will need:
 
 + The URL of the Azure Storage Account container
@@ -27,6 +28,13 @@ In order to run this solution, you will need:
     | Quick Scan | __READ__, __WRITE__ |
     | Sample Uploads | __READ__, __WRITE__ |
 + `Storage Blob Data Contributor` permissions on the existing container
+
+### Install requirements
+Change to the storage-account-container-protection/on-demand directory and run the following command
+
+```shell
+python3 -m pip install -r requirements.txt
+```
 
 ### Execution syntax
 
