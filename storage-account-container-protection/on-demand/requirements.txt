@@ -1,0 +1,3 @@
+azure-storage-blob
+azure-identity
+crowdstrike-falconpy

@@ -12,3 +12,4 @@
 | Integration Name | Description |
 |:-|:-|
 | [Microsoft Sentinel Adversary Intelligence](adversary-intelligence) | Documentation for installing the CrowdStrike Falcon Adversary Intelligence data connector in Microsoft Sentinel |
+| [Storage Account Container Protection](storage-account-container-protection) | Examples for implementing CrowdStrike Falcon Quickscan workflows on Azure Storage Containers with Azure Function App  |
