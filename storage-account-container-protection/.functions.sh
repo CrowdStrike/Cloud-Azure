@@ -27,11 +27,11 @@ env_destroyed() {
 ### API FALCON CLOUD LOGIC ###
 cs_cloud() {
     case "${cs_falcon_cloud}" in
-    us-1) echo "api.crowdstrike.com" ;;
-    us-2) echo "api.us-2.crowdstrike.com" ;;
-    eu-1) echo "api.eu-1.crowdstrike.com" ;;
-    us-gov-1) echo "api.laggar.gcw.crowdstrike.com" ;;
-    *) die "Unrecognized Falcon Cloud: ${cs_falcon_cloud}" ;;
+        us-1) echo "api.crowdstrike.com" ;;
+        us-2) echo "api.us-2.crowdstrike.com" ;;
+        eu-1) echo "api.eu-1.crowdstrike.com" ;;
+        us-gov-1) echo "api.laggar.gcw.crowdstrike.com" ;;
+        *) die "Unrecognized Falcon Cloud: ${cs_falcon_cloud}" ;;
     esac
 }
 
@@ -79,6 +79,31 @@ cs_set_base_url() {
     cs_falcon_cloud="${region_hint}"
 }
 
+download_malicious_examples() {
+    max_retries=3
+
+    wget -O malqueryinator.py https://raw.githubusercontent.com/CrowdStrike/falconpy/main/samples/malquery/malqueryinator.py
+    python3 -m pip install urllib3==1.26.15 crowdstrike-falconpy
+
+    success=0
+    for ((retry_count = 0; retry_count < max_retries; retry_count++)); do
+        python3 malqueryinator.py -v ryuk -t wide -f malicious.zip -e 3 -k "$FID" -s "$FSECRET"
+        ret=$?
+        if [ $ret == 0 ]; then
+            echo "Malicious files were succesfully downloaded."
+            success=1
+            break
+        else
+            echo "Files not successfully downloaded... retrying."
+        fi
+    done
+    if [ "$success" -ne 1 ]; then
+        echo "Malicious files failed to download after $max_retries tries. This could be due to a network error. Try rerunning demo."
+        exit 1
+    fi
+
+}
+
 configure_environment() {
     CHDIR="$1"
     STORAGE_ACCOUNT=$(terraform -chdir="${CHDIR}" output -raw demo_storage_account_name)
@@ -96,9 +121,7 @@ configure_environment() {
     cp /usr/sbin/fdisk "$TESTS"/safe2.bin
     # # MALICIOUS EXAMPLES
     # echo -e "Malicious file prep...\n"
-    wget -O malqueryinator.py https://raw.githubusercontent.com/CrowdStrike/falconpy/main/samples/malquery/malqueryinator.py
-    python3 -m pip install urllib3==1.26.15 crowdstrike-falconpy
-    python3 malqueryinator.py -v ryuk -t wide -f malicious.zip -e 3 -k "$FID" -s "$FSECRET"
+    download_malicious_examples
     unzip -d "$TESTS" -P infected malicious.zip
     C=0
     # shellcheck disable=SC2045
