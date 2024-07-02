@@ -68,7 +68,7 @@ If this is the first time you're executing the demonstration, Terraform will ini
 
 It takes roughly 3 minutes to stand up the environment.
 
-> [!info]
+> [!NOTE]
 > Sometimes the step to download the malicious files will error out. The script will attempt to retry the step a maximum 3 times, after which the script will fail. If the script fails, you can simply rerun `./existing.sh up`
 
 When the environment is done, you will be presented with the message:
