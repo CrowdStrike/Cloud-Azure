@@ -68,6 +68,9 @@ If this is the first time you're executing the demonstration, Terraform will ini
 
 It takes roughly 3 minutes to stand up the environment.
 
+> [!info]
+> Sometimes the step to download the malicious files will error out. The script will attempt to retry the step a maximum 3 times, after which the script will fail. If the script fails, you can simply rerun `./existing.sh up`
+
 When the environment is done, you will be presented with the message:
 
 ```terminal
@@ -95,6 +98,13 @@ Next, you'll use the helper commands to upload the sample files, and check for f
 
 Now that your environment is stood up, and your cloud shell is configured, you can start testing functionality.
 
+### Export helper commands path
+The demo environment uses a few helper commands to help with certain actions. For the helper commands to work properly, you will need to export the directory path to your PATH variable by running the  commands below.
+
+```sh
+export PATH=~/Cloud-Azure/storage-account-container-protection/bin:$PATH
+```
+
 ### List sample files
 
 Run the following command to list the sample files:
@@ -118,8 +128,6 @@ malicious1.bin  malicious2.bin  malicious3.bin  safe1.bin  safe2.bin  unscannabl
 ### Upload sample files
 
 Run the following command to upload the entire contents of the `~/testfiles` folder to the demonstration bucket:
-
-***As stated in the environment message, for the commands to work, you will need to export the bin directory to your Path `export PATH=~/Cloud-Azure/storage-account-container-protection/bin:$PATH`***
 
 ```sh
 upload
