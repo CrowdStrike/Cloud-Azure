@@ -159,13 +159,16 @@ you will use the helper command `get-findings` as the main method for this demon
 
 Run the following command to view any detected Malware threats:
 
-***Although Cloud Shell should already have permissions, you might need to log in to Azure for this command to work by running `az login`. This is a quirk of Azure Cloud Shell***
-
 ```sh
 get-findings
 ```
 
-*Note: Due to cold starts, it may take up to 10 minutes for Azure Functions to detect the files*
+> [!NOTE]
+> Although Cloud Shell should already have permissions, you might need to log in to Azure for this command to work by running `az login`. This is a quirk of Azure Cloud Shell
+
+> [!TIP]
+> Due to cold starts, it could take up to 10 minutes for Azure Functions to detect the files. You can try opening the Azure function to nudge an invocation, or running the upload command again
+
 
 #### Example
 
