@@ -1,5 +1,7 @@
 # Azure Virtual Machines
 
+> [!WARNING]
+> This folder is being deprecated. There will be no more updates made to the contents of this folder. The solution has been moved and can be found here [azure-falcon-vm-protection](https://github.com/CrowdStrike/azure-falcon-vm-protection)
 
 ## Deploying CrowdStrike Falcon
 

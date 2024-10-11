@@ -4,6 +4,9 @@
 
 # CrowdStrike Falcon Azure Storage Account Container Protection
 
+> [!WARNING]
+> This folder is being deprecated. There will be no more updates made to the contents of this folder. The solution has been moved and can be found here [azure-storage-account-container-protection](https://github.com/CrowdStrike/azure-storage-account-container-protection)
+
 ## Prerequisites
 + Have access to Azure w/ permissions to manage resources
 + Knowledge on creating Falcon API Keys
