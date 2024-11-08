@@ -4,7 +4,6 @@
 ## CrowdStrike Sensor Automation
 | Integration Name | Description |
 |:-|:-|
-| [Container Workload Deployment Guides](container) | Detailed guides on Falcon Sensor deployment patterns for container based workloads. |
 | [VMs](vm) | Examples for installing Falcon Sensor on different Azure Virtual Machine resources including VM Extensions, Scale Sets, VM Applications, etc. |
 
 
