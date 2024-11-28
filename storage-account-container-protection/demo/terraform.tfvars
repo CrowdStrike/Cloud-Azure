@@ -1,2 +1,2 @@
 project = "qsdemo"
-location = "East US"
+location = "West Europe"
