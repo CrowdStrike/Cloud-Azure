@@ -8,10 +8,15 @@
 |:-|:-|
 | [VMs](https://github.com/CrowdStrike/azure-falcon-vm-protection) | Examples for installing Falcon Sensor on different Azure Virtual Machine resources including VM Extensions, Scale Sets, VM Applications, etc. |
 
-
 ## Azure Service Integrations
 
 | Integration Name | Description |
 |:-|:-|
 | [Microsoft Sentinel Adversary Intelligence](adversary-intelligence) | Documentation for installing the CrowdStrike Falcon Adversary Intelligence data connector in Microsoft Sentinel |
-| [Storage Account Container Protection](https://github.com/CrowdStrike/azure-storage-account-container-protection) | Examples for implementing CrowdStrike Falcon Quickscan workflows on Azure Storage Containers with Azure Function App  |
+
+## Azure Storage Container Protection
+
+| Name | Description |
+|:-|:-|
+| [Storage Account Container Protection w/ QuickScan Pro API](https://github.com/CrowdStrike/cloud-storage-protection) | Examples for implementing CrowdStrike Falcon QuickScan Pro workflows on Azure Storage Containers with Azure Function App  |
+| [Storage Account Container Protection w/ QuickScan ML](https://github.com/CrowdStrike/azure-storage-account-container-protection) (*Deprecated and slated for removal in 6 months*) | Examples for implementing CrowdStrike Falcon QuickScan ML workflows on Azure Storage Containers with Azure Function App  |
