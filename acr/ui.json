@@ -1,0 +1,155 @@
+{
+    "$schema": "<relative path to createFormUI.schema.json>",
+    "view": {
+        "kind": "Form",
+        "properties": {
+            "title": "Automated Onboarding of Azure Container Registries to Falcon Cloud Security",
+            "isWizard": true,
+            "steps": [
+                {
+                    "name": "basics",
+                    "label": "Basics",
+                    "elements": [
+                        {
+                            "name": "resourceScope",
+                            "type": "Microsoft.Common.ResourceScope",
+                            "location": {
+                                "resourceTypes": [
+                                    "microsoft.resources/resourcegroups"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "sp",
+                    "label": "Service Principal",
+                    "elements": [
+                        {
+                            "name": "newSpinfo",
+                            "type": "Microsoft.Common.TextBlock",
+                            "visible": true,
+                            "options": {
+                                "text": "NOTE: If selected a new service principal may be created for you. Please take note of the password when following the wizard.",
+                                "link": {
+                                    "label": "Learn more",
+                                    "uri": "https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-2"
+                                }
+                            }
+                        },
+                        {
+                            "name": "existingSpinfo",
+                            "type": "Microsoft.Common.TextBlock",
+                            "visible": true,
+                            "options": {
+                                "text": "NOTE: When using an existing service principal, please ensure the ArcPull role has been applied and please have the password available or create a new password.",
+                                "link": {
+                                    "label": "Learn more",
+                                    "uri": "https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-7?tabs=bash#reset-credentials-returning-output-to-the-console-and-log-file"
+                                }
+                            }
+                        },
+                        {
+                            "name": "ServicePrincipal",
+                            "type": "Microsoft.Common.ServicePrincipalSelector",
+                            "label": {
+                                "password": "Password",
+                                "authenticationType": "Authentication Type",
+                                "sectionHeader": "Service Principal"
+                            },
+                            "toolTip": {
+                                "password": "Password",
+                                "authenticationType": "Authentication Type"
+                            },
+                            "defaultValue": {
+                                "principalId": "<default guid>",
+                                "name": "<default name>"
+                            },
+                            "constraints": {
+                                "required": false
+                            },
+                            "options": {
+                                "hideCertificate": true
+                            },
+                            "visible": true
+                        }
+                    ]
+                },
+                {
+                    "name": "falcon",
+                    "label": "Falcon Cloud Security Information",
+                    "elements": [
+                        {
+                            "name": "information",
+                            "type": "Microsoft.Common.InfoBox",
+                            "visible": true,
+                            "options": {
+                                "icon": "None",
+                                "text": "Please enter your Falcon Client ID and Client Secret. If you do not have a Falcon Client ID, please contact your Falcon administrator. For more information, see <a href='https://falcon.crowdstrike.com' target='_blank'>here</a>.",
+                                "uri": "https://falcon.crowdstrike.com"
+                            }
+                        },
+                        {
+                            "name": "cid",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Falcon Client ID",
+                            "defaultValue": "",
+                            "toolTip": "Use only allowed characters",
+                            "placeholder": "",
+                            "multiLine": false,
+                            "constraints": {
+                                "required": true,
+                                "validations": [
+                                    {}
+                                ]
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "secret",
+                            "type": "Microsoft.Common.PasswordBox",
+                            "label": {
+                                "password": "Falcon Client Secret"
+                            },
+                            "toolTip": "",
+                            "validations": [
+                                {}
+                            ],
+                            "options": {
+                                "hideConfirmation": true
+                            },
+                            "visible": true
+                        }
+                    ]
+                },
+                {
+                    "name": "tags",
+                    "label": "Tags",
+                    "elements": [
+                        {
+                            "name": "tagsByResource",
+                            "type": "Microsoft.Common.TagsByResource",
+                            "resources": [
+                                "Microsoft.Storage/storageAccounts",
+                                "Microsoft.Compute/virtualMachines"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "outputs": {
+            "kind": "Subscription",
+            "subscriptionId": "[steps('basics').resourceScope.subscription.id]",
+            "location": "[steps('basics').resourceScope.location.name]",
+            "parameters": {
+                "tagsByResource": "[steps('tags').tagsByResource]",
+                "spName": "[steps('sp').ServicePrincipal.appId]",
+                "spObjectId": "[first(steps('sp').ServicePrincipal.objectId)]",
+                "spPassword": "[steps('sp').ServicePrincipal.password]",
+                "falconClientId": "[steps('falcon').cid]",
+                "falconClientSecret": "[steps('falcon').secret]"
+            }
+        }
+    }
+}
