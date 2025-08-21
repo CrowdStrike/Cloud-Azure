@@ -21,8 +21,8 @@
 | [Storage Account Container Protection w/ QuickScan Pro API](https://github.com/CrowdStrike/cloud-storage-protection) | Examples for implementing CrowdStrike Falcon QuickScan Pro workflows on Azure Storage Containers with Azure Function App  |
 | [Storage Account Container Protection w/ QuickScan ML](https://github.com/CrowdStrike/azure-storage-account-container-protection) (*Deprecated and slated for removal in 6 months*) | Examples for implementing CrowdStrike Falcon QuickScan ML workflows on Azure Storage Containers with Azure Function App  |
 
-## CrowdStrike SAzure Container Registry
+## CrowdStrike Azure Container Registry
 
 | Integration Name | Description |
 |:-|:-|
-| [ACR](https://github.com/mikedzikowski/Cloud-Azure/blob/main/acr/README.MD) | This repository contains resources to deploy an automation framework to on-board Azure Container Registries to Falcon Cloud Security |
+| [ACR Automation](https://github.com/mikedzikowski/Cloud-Azure/blob/main/acr/README.MD) | This repository contains resources to deploy an automation framework to on-board Azure Container Registries to Falcon Cloud Security |
