@@ -1,0 +1,738 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.30.23.60470",
+      "templateHash": "10413343444011302778"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[deployment().location]",
+      "metadata": {
+        "description": "The location for the resources deployed in this solution."
+      }
+    },
+    "deploymentNameSuffix": {
+      "type": "string",
+      "defaultValue": "[utcNow()]",
+      "metadata": {
+        "description": "The suffix to be added to the deployment name."
+      }
+    },
+    "resourceGroupName": {
+      "type": "string",
+      "defaultValue": "rg-acr-cs",
+      "metadata": {
+        "description": "The name of the resource group."
+      }
+    },
+    "spName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the service principal."
+      }
+    },
+    "spObjectId": {
+      "type": "string"
+    },
+    "spPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password for the service principal."
+      }
+    },
+    "falconClientId": {
+      "type": "string",
+      "metadata": {
+        "description": "The client ID for the Falcon API."
+      }
+    },
+    "falconClientSecret": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The client secret for the Falcon API."
+      }
+    }
+  },
+  "variables": {
+    "arcPullRoleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d",
+    "automationAccountName": "[format('aa-acr-{0}', uniqueString(subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))))]",
+    "azureReaderRoleId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+    "cloud": "[environment().name]",
+    "keyVaultSecretReaderRoleId": "4633458b-17de-408a-b874-0445c86b69e6",
+    "psFalconUri": "https://www.powershellgallery.com/api/v2/package/PSFalcon/2.2.7",
+    "psFalconVersion": "2.2.7",
+    "runbook": [
+      {
+        "name": "New-AzureContainerRegistration.ps1",
+        "uri": "https://raw.githubusercontent.com/mikedzikowski/OnBoardAzureContainerRegistryUsingPsFalconApi/refs/heads/main/runbooks/New-AzureContainerRegistration.ps1"
+      }
+    ],
+    "subscriptionId": "[subscription().subscriptionId]",
+    "tenantId": "[tenant().tenantId]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2024-03-01",
+      "name": "[parameters('resourceGroupName')]",
+      "location": "[parameters('location')]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[format('keyvault-deployment-{0}', parameters('deploymentNameSuffix'))]",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "falconClientId": {
+            "value": "[parameters('falconClientId')]"
+          },
+          "falconClientSecret": {
+            "value": "[parameters('falconClientSecret')]"
+          },
+          "keyVaultName": {
+            "value": "[format('kv-acr-{0}', uniqueString(subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))))]"
+          },
+          "spName": {
+            "value": "[parameters('spName')]"
+          },
+          "spPassword": {
+            "value": "[parameters('spPassword')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "9836612533428588255"
+            }
+          },
+          "parameters": {
+            "keyVaultName": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "skuName": {
+              "type": "string",
+              "defaultValue": "standard",
+              "allowedValues": [
+                "standard",
+                "premium"
+              ]
+            },
+            "spName": {
+              "type": "string"
+            },
+            "spPassword": {
+              "type": "securestring"
+            },
+            "falconClientId": {
+              "type": "string"
+            },
+            "falconClientSecret": {
+              "type": "securestring"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.KeyVault/vaults",
+              "apiVersion": "2022-07-01",
+              "name": "[parameters('keyVaultName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "tenantId": "[subscription().tenantId]",
+                "sku": {
+                  "family": "A",
+                  "name": "[parameters('skuName')]"
+                },
+                "enabledForDeployment": true,
+                "enabledForTemplateDeployment": true,
+                "enabledForDiskEncryption": false,
+                "enableRbacAuthorization": true,
+                "enableSoftDelete": true,
+                "networkAcls": {
+                  "bypass": "AzureServices",
+                  "defaultAction": "Allow",
+                  "ipRules": [],
+                  "virtualNetworkRules": []
+                },
+                "publicNetworkAccess": "Enabled"
+              }
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'app-id')]",
+              "properties": {
+                "value": "[parameters('spName')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'app-secret')]",
+              "properties": {
+                "value": "[parameters('spPassword')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'falcon-client-id')]",
+              "properties": {
+                "value": "[parameters('falconClientId')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), 'falcon-client-secret')]",
+              "properties": {
+                "value": "[parameters('falconClientSecret')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "keyVaultName": {
+              "type": "string",
+              "value": "[parameters('keyVaultName')]"
+            },
+            "keyVaultResourceId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[format('automationaccount-deployment-{0}', parameters('deploymentNameSuffix'))]",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "automationAccountName": {
+            "value": "[variables('automationAccountName')]"
+          },
+          "environment": {
+            "value": "[variables('cloud')]"
+          },
+          "keyVaultName": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('keyvault-deployment-{0}', parameters('deploymentNameSuffix'))), '2022-09-01').outputs.keyVaultName.value]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "psFalconUri": {
+            "value": "[variables('psFalconUri')]"
+          },
+          "psFalconVersion": {
+            "value": "[variables('psFalconVersion')]"
+          },
+          "runbookNames": {
+            "value": "[variables('runbook')]"
+          },
+          "subscriptionId": {
+            "value": "[variables('subscriptionId')]"
+          },
+          "tenantId": {
+            "value": "[variables('tenantId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "11110022569617325497"
+            }
+          },
+          "parameters": {
+            "automationAccountName": {
+              "type": "string"
+            },
+            "environment": {
+              "type": "string"
+            },
+            "keyVaultName": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "now": {
+              "type": "string",
+              "defaultValue": "[utcNow('yyyy-MM-ddTHH:mm:ss')]"
+            },
+            "psFalconUri": {
+              "type": "string"
+            },
+            "psFalconVersion": {
+              "type": "string"
+            },
+            "runbookNames": {
+              "type": "array"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "tenantId": {
+              "type": "string"
+            },
+            "todayDate": {
+              "type": "string",
+              "defaultValue": "[utcNow('yyyy-MM-dd')]"
+            }
+          },
+          "variables": {
+            "nowTicks": "[dateTimeToEpoch(parameters('now'))]",
+            "offsetSeconds": 300,
+            "startTime": "01:00:00"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Automation/automationAccounts",
+              "apiVersion": "2021-06-22",
+              "name": "[parameters('automationAccountName')]",
+              "location": "[parameters('location')]",
+              "identity": {
+                "type": "SystemAssigned"
+              },
+              "properties": {
+                "sku": {
+                  "name": "Basic"
+                },
+                "encryption": {
+                  "keySource": "Microsoft.Automation",
+                  "identity": {}
+                }
+              }
+            },
+            {
+              "copy": {
+                "name": "runbookDeployment",
+                "count": "[length(parameters('runbookNames'))]"
+              },
+              "type": "Microsoft.Automation/automationAccounts/runbooks",
+              "apiVersion": "2019-06-01",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), parameters('runbookNames')[copyIndex()].name)]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "runbookType": "PowerShell",
+                "logProgress": true,
+                "logVerbose": true,
+                "publishContentLink": {
+                  "uri": "[parameters('runbookNames')[copyIndex()].uri]",
+                  "version": "1.0.0.0"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Automation/automationAccounts/schedules",
+              "apiVersion": "2023-11-01",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), 'runbookSchedule')]",
+              "properties": {
+                "description": "Schedule for the PSFalcon runbook to connect new ACR to Falcon Cloud Security",
+                "expiryTime": "9999-12-31T00:00:00Z",
+                "frequency": "Hour",
+                "interval": 1,
+                "startTime": "[dateTimeAdd(format('{0}T{1}', parameters('todayDate'), variables('startTime')), if(greater(dateTimeToEpoch(format('{0}T{1}', parameters('todayDate'), variables('startTime'))), add(variables('nowTicks'), variables('offsetSeconds'))), 'P0D', 'P1D'))]",
+                "timeZone": "Eastern Standard Time"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+              "apiVersion": "2023-11-01",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), guid(parameters('now')))]",
+              "properties": {
+                "parameters": {
+                  "environment": "[parameters('environment')]",
+                  "vaultName": "[parameters('keyVaultName')]",
+                  "subscriptionId": "[parameters('subscriptionId')]",
+                  "tenantId": "[parameters('tenantId')]"
+                },
+                "schedule": {
+                  "name": "runbookSchedule"
+                },
+                "runbook": {
+                  "name": "[parameters('runbookNames')[0].name]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]",
+                "runbookDeployment",
+                "[resourceId('Microsoft.Automation/automationAccounts/schedules', parameters('automationAccountName'), 'runbookSchedule')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Automation/automationAccounts/modules",
+              "apiVersion": "2022-08-08",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), 'PSFalcon')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "contentLink": {
+                  "uri": "[parameters('psFalconUri')]",
+                  "version": "[parameters('psFalconVersion')]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "aaIdentityId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName')), '2021-06-22', 'full').identity.principalId]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('keyvault-deployment-{0}', parameters('deploymentNameSuffix')))]",
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[format('rbac-readerRole-{0}', parameters('deploymentNameSuffix'))]",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "principalId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('automationaccount-deployment-{0}', parameters('deploymentNameSuffix'))), '2022-09-01').outputs.aaIdentityId.value]"
+          },
+          "roleId": {
+            "value": "[variables('azureReaderRoleId')]"
+          },
+          "scope": {
+            "value": "[variables('subscriptionId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "3766304686476691287"
+            }
+          },
+          "parameters": {
+            "canDelegate": {
+              "type": "bool",
+              "defaultValue": false
+            },
+            "description": {
+              "type": "string",
+              "defaultValue": "Azure Automation RBAC permissions Required by PSFalcon and Azure Runbooks"
+            },
+            "principalId": {
+              "type": "string"
+            },
+            "roleId": {
+              "type": "string"
+            },
+            "scope": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "name": "[guid(parameters('scope'), parameters('principalId'), parameters('roleId'))]",
+              "properties": {
+                "canDelegate": "[parameters('canDelegate')]",
+                "description": "[parameters('description')]",
+                "principalId": "[parameters('principalId')]",
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId'))]",
+                "principalType": "ServicePrincipal"
+              }
+            }
+          ],
+          "outputs": {
+            "rbac": {
+              "type": "string",
+              "value": "[reference(subscriptionResourceId('Microsoft.Authorization/roleAssignments', guid(parameters('scope'), parameters('principalId'), parameters('roleId'))), '2020-04-01-preview').roleDefinitionId]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('automationaccount-deployment-{0}', parameters('deploymentNameSuffix')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[format('rbac-arcPullRole-{0}', parameters('deploymentNameSuffix'))]",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "principalId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('automationaccount-deployment-{0}', parameters('deploymentNameSuffix'))), '2022-09-01').outputs.aaIdentityId.value]"
+          },
+          "roleId": {
+            "value": "[variables('arcPullRoleId')]"
+          },
+          "scope": {
+            "value": "[variables('subscriptionId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "3766304686476691287"
+            }
+          },
+          "parameters": {
+            "canDelegate": {
+              "type": "bool",
+              "defaultValue": false
+            },
+            "description": {
+              "type": "string",
+              "defaultValue": "Azure Automation RBAC permissions Required by PSFalcon and Azure Runbooks"
+            },
+            "principalId": {
+              "type": "string"
+            },
+            "roleId": {
+              "type": "string"
+            },
+            "scope": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "name": "[guid(parameters('scope'), parameters('principalId'), parameters('roleId'))]",
+              "properties": {
+                "canDelegate": "[parameters('canDelegate')]",
+                "description": "[parameters('description')]",
+                "principalId": "[parameters('principalId')]",
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId'))]",
+                "principalType": "ServicePrincipal"
+              }
+            }
+          ],
+          "outputs": {
+            "rbac": {
+              "type": "string",
+              "value": "[reference(subscriptionResourceId('Microsoft.Authorization/roleAssignments', guid(parameters('scope'), parameters('principalId'), parameters('roleId'))), '2020-04-01-preview').roleDefinitionId]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('automationaccount-deployment-{0}', parameters('deploymentNameSuffix')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[format('rbac-keyVaultSecretReaderRole-{0}', parameters('deploymentNameSuffix'))]",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "identityPrincipalId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('automationaccount-deployment-{0}', parameters('deploymentNameSuffix'))), '2022-09-01').outputs.aaIdentityId.value]"
+          },
+          "keyVaultName": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('keyvault-deployment-{0}', parameters('deploymentNameSuffix'))), '2022-09-01').outputs.keyVaultName.value]"
+          },
+          "roleDefinitionId": {
+            "value": "[variables('keyVaultSecretReaderRoleId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "14245131053779483528"
+            }
+          },
+          "parameters": {
+            "identityPrincipalId": {
+              "type": "string"
+            },
+            "keyVaultName": {
+              "type": "string"
+            },
+            "roleDefinitionId": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[format('Microsoft.KeyVault/vaults/{0}', parameters('keyVaultName'))]",
+              "name": "[guid(parameters('identityPrincipalId'), parameters('roleDefinitionId'), resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')))]",
+              "properties": {
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('roleDefinitionId'))]",
+                "principalId": "[parameters('identityPrincipalId')]",
+                "principalType": "ServicePrincipal"
+              }
+            }
+          ],
+          "outputs": {
+            "keyVaultRoleAssignmentId": {
+              "type": "string",
+              "value": "[extensionResourceId(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), 'Microsoft.Authorization/roleAssignments', guid(parameters('identityPrincipalId'), parameters('roleDefinitionId'), resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('automationaccount-deployment-{0}', parameters('deploymentNameSuffix')))]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('keyvault-deployment-{0}', parameters('deploymentNameSuffix')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[format('appId-rbac-arcPullRole-{0}', parameters('deploymentNameSuffix'))]",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "principalId": {
+            "value": "[parameters('spObjectId')]"
+          },
+          "roleId": {
+            "value": "[variables('arcPullRoleId')]"
+          },
+          "scope": {
+            "value": "[variables('subscriptionId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.23.60470",
+              "templateHash": "3766304686476691287"
+            }
+          },
+          "parameters": {
+            "canDelegate": {
+              "type": "bool",
+              "defaultValue": false
+            },
+            "description": {
+              "type": "string",
+              "defaultValue": "Azure Automation RBAC permissions Required by PSFalcon and Azure Runbooks"
+            },
+            "principalId": {
+              "type": "string"
+            },
+            "roleId": {
+              "type": "string"
+            },
+            "scope": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "name": "[guid(parameters('scope'), parameters('principalId'), parameters('roleId'))]",
+              "properties": {
+                "canDelegate": "[parameters('canDelegate')]",
+                "description": "[parameters('description')]",
+                "principalId": "[parameters('principalId')]",
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('roleId'))]",
+                "principalType": "ServicePrincipal"
+              }
+            }
+          ],
+          "outputs": {
+            "rbac": {
+              "type": "string",
+              "value": "[reference(subscriptionResourceId('Microsoft.Authorization/roleAssignments', guid(parameters('scope'), parameters('principalId'), parameters('roleId'))), '2020-04-01-preview').roleDefinitionId]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('automationaccount-deployment-{0}', parameters('deploymentNameSuffix')))]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('keyvault-deployment-{0}', parameters('deploymentNameSuffix')))]",
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]"
+      ]
+    }
+  ]
+}
