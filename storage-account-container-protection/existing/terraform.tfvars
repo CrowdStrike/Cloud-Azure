@@ -1,5 +1,0 @@
-project = "qsexisting"
-location = "East US"
-quick_scan_storage_account_name = "TF_STORAGE_ACCOUNT_NAME"
-quick_scan_storage_account_container_name = "TF_STORAGE_ACCOUNT_CONTAINER_NAME"
-quick_scan_storage_account_resource_group = "TF_RESOURCE_GROUP"
