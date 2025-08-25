@@ -19,4 +19,3 @@
 | Name | Description |
 |:-|:-|
 | [Storage Account Container Protection w/ QuickScan Pro API](https://github.com/CrowdStrike/cloud-storage-protection) | Examples for implementing CrowdStrike Falcon QuickScan Pro workflows on Azure Storage Containers with Azure Function App  |
-| [Storage Account Container Protection w/ QuickScan ML](https://github.com/CrowdStrike/azure-storage-account-container-protection) (*Deprecated and slated for removal in 6 months*) | Examples for implementing CrowdStrike Falcon QuickScan ML workflows on Azure Storage Containers with Azure Function App  |

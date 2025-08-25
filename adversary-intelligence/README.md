@@ -75,8 +75,11 @@ The following parameters are required for the ARM template top be deployed.
 To integrate with CrowdStrike Falcon Adversary Intelligence make sure you have:
 
 **Workspace:** read and write permissions on the workspace are required.
+
 **Keys:** read permissions to shared keys for the workspace are required. [See the documentation to learn more about workspace keys](https://learn.microsoft.com/en-us/azure/azure-monitor/agents/agent-windows?WT.mc_id=Portal-fx&tabs=setup-wizard#obtain-workspace-id-and-key).
+
 **Microsoft\.Web\/sites permissions:** Read and write permissions to Azure Functions to create a Function App is required. [See the documentation to learn more about Azure Functions](https://learn.microsoft.com/en-us/azure/azure-functions/?WT.mc_id=Portal-fx).
+
 **CrowdStrike API Client ID and Client Secret**: CROWDSTRIKE_CLIENT_ID, CROWDSTRIKE_CLIENT_SECRET, CROWDSTRIKE_BASE_URL. CrowdStrike credentials must have ==Indicators (Falcon Intelligence) read== scope.
 
 ## Getting Started
