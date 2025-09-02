@@ -6,7 +6,7 @@
 
 | Integration Name | Description |
 |:-|:-|
-| [VMs](https://github.com/CrowdStrike/azure-falcon-vm-protection) | Examples for installing Falcon Sensor on different Azure Virtual Machine resources including VM Extensions, Scale Sets, VM Applications, etc. |
+| [VM Extension](https://github.com/CrowdStrike/azure-vm-extension) | Utilize VM Extensions to automatically deploy the CrowdStrike Falcon Sensor to your Azure Virtual Machines |
 
 ## Azure Service Integrations
 
